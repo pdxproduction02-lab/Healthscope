@@ -160,7 +160,47 @@ function Chat({ close }) {
   const send = () => { const q = question.trim(); if (!q) return; setMessages(prev => [...prev, { role: 'user', text: q }, { role: 'assistant', text: answer(q) }]); setQuestion('') }
   return <div className="overlay"><div className="chat"><header><b><Sparkles size={15} />Ask HealthScope</b><button onClick={close} aria-label="Close assistant"><X size={18} /></button></header><div className="messages">{messages.map((m, i) => <div className={`msg ${m.role === 'user' ? 'user' : ''}`} key={i}>{m.text}</div>)}</div><div className="suggest">{['What is dietary fiber?', 'What does sodium mean?'].map(q => <button key={q} onClick={() => setQuestion(q)}>{q}</button>)}</div><div className="chatinput"><input value={question} onChange={e => setQuestion(e.target.value)} onKeyDown={e => e.key === 'Enter' && send()} placeholder="Ask something…" aria-label="Ask HealthScope" /><button onClick={send} aria-label="Send"><Send size={17} /></button></div><small>Educational information only · Not diagnosis or treatment.</small></div></div>
 }
-function answer(question) { const q = question.toLowerCase(); if (q.includes('fiber')) return 'Dietary fiber is a type of carbohydrate found mainly in plant foods. Much of it is not fully digested, and it is commonly discussed in relation to digestive health.'; if (q.includes('sodium')) return 'Sodium is a mineral and electrolyte. On food labels it is usually listed in milligrams per serving. Serving size matters when comparing products.'; if (q.includes('sleep')) return 'Sleep is a core part of everyday wellbeing. HealthScope can help you observe your own routine, but it cannot determine a medical sleep condition.'; return 'I can explain that topic in general terms. Personal medical questions should be discussed with a qualified healthcare professional.' }
+async function answer(question) {
+  try {
+    setMessages(prev => [
+      ...prev,
+      { role: 'assistant', text: 'Thinking...' }
+    ]);
+
+    const response = await fetch('/api/ask-healthscope', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        question: question
+      })
+    });
+
+    const data = await response.json();
+
+    setMessages(prev => {
+      const updated = [...prev];
+      updated[updated.length - 1] = {
+        role: 'assistant',
+        text: data.answer || 'Sorry, I could not generate a response right now.'
+      };
+      return updated;
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    setMessages(prev => {
+      const updated = [...prev];
+      updated[updated.length - 1] = {
+        role: 'assistant',
+        text: 'Connection error. Please try again.'
+      };
+      return updated;
+    });
+  }
+}
 
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}))
 
