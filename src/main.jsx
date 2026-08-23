@@ -164,18 +164,20 @@ async function answer(question) {
   try {
     setMessages(prev => [
       ...prev,
-      { role: 'assistant', text: 'Thinking...' }
+      {
+        role: "assistant",
+        text: "Thinking..."
+      }
     ]);
 
-    const response = await fetch('/api/ask-healthscope', {
-      method: 'POST',
+    const response = await fetch("/api/ask-healthscope", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-  message: question,
-  history: []
-})
+        message: question,
+        history: []
       })
     });
 
@@ -183,27 +185,31 @@ async function answer(question) {
 
     setMessages(prev => {
       const updated = [...prev];
+
       updated[updated.length - 1] = {
-        role: 'assistant',
-        text: data.answer || 'Sorry, I could not generate a response right now.'
+        role: "assistant",
+        text: data.answer || "Sorry, I couldn't generate a response right now."
       };
+
       return updated;
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("HealthScope AI error:", error);
 
     setMessages(prev => {
       const updated = [...prev];
+
       updated[updated.length - 1] = {
-        role: 'assistant',
-        text: 'Connection error. Please try again.'
+        role: "assistant",
+        text: "HealthScope AI is temporarily unavailable. Please try again."
       };
+
       return updated;
     });
   }
 }
-
+    
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}))
 
 createRoot(document.getElementById('root')).render(<App />)
