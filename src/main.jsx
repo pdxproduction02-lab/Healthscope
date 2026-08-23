@@ -155,59 +155,150 @@ function Learn() {
 function Profile({ dark, setDark, clear }) { return <><Title k="PROFILE" h="Your data, under your control." p="No account is required for the demo. Keep everyday tracking local where practical." /><section className="profile"><div className="card pad"><div className="avatar"><UserRound size={25} /></div><h2>Guest profile</h2><p>Demo-ready, local-first experience.</p></div><div className="card pad settings"><div className="setting"><Moon size={17} /><span><b>Appearance</b><small>{dark ? 'Dark' : 'Light'} mode</small></span><button className="toggle" onClick={() => setDark(!dark)} aria-label="Toggle dark mode"><i className={dark ? 'on' : ''} /></button></div><div className="setting"><ShieldCheck size={17} /><span><b>Local-first storage</b><small>Wellness entries stay in this browser.</small></span></div><div className="privacy"><ShieldCheck size={17} /><span><b>Privacy principle</b><small>Only send information to AI services when needed. Disclose cloud processing in production.</small></span></div><button className="danger" onClick={clear}><Trash2 size={16} />Delete local demo data</button></div></section><Disclaimer /></> }
 
 function Chat({ close }) {
-  const [messages, setMessages] = useState([{ role: 'assistant', text: 'Hi! I’m Ask HealthScope. I can explain wellness, nutrition, food labels, ingredients, sleep basics, movement and health terminology.' }])
-  const [question, setQuestion] = useState('')
-  const send = () => { const q = question.trim(); if (!q) return; setMessages(prev => [...prev, { role: 'user', text: q }, { role: 'assistant', text: answer(q) }]); setQuestion('') }
-  return <div className="overlay"><div className="chat"><header><b><Sparkles size={15} />Ask HealthScope</b><button onClick={close} aria-label="Close assistant"><X size={18} /></button></header><div className="messages">{messages.map((m, i) => <div className={`msg ${m.role === 'user' ? 'user' : ''}`} key={i}>{m.text}</div>)}</div><div className="suggest">{['What is dietary fiber?', 'What does sodium mean?'].map(q => <button key={q} onClick={() => setQuestion(q)}>{q}</button>)}</div><div className="chatinput"><input value={question} onChange={e => setQuestion(e.target.value)} onKeyDown={e => e.key === 'Enter' && send()} placeholder="Ask something…" aria-label="Ask HealthScope" /><button onClick={send} aria-label="Send"><Send size={17} /></button></div><small>Educational information only · Not diagnosis or treatment.</small></div></div>
-}
-async function answer(question) {
-  try {
+  const [messages, setMessages] = useState([
+    {
+      role: 'assistant',
+      text: 'Hi! I’m Ask HealthScope. I can explain wellness, nutrition, food labels, ingredients, sleep basics, movement and health terminology.'
+    }
+  ]);
+
+  const [question, setQuestion] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const send = async () => {
+    const q = question.trim();
+
+    if (!q || loading) return;
+
+    // Add the user's message
     setMessages(prev => [
       ...prev,
-      {
-        role: "assistant",
-        text: "Thinking..."
-      }
+      { role: 'user', text: q }
     ]);
 
-    const response = await fetch("/api/ask-healthscope", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: question,
-        history: []
-      })
-    });
+    setQuestion('');
+    setLoading(true);
 
-    const data = await response.json();
+    // Add temporary AI thinking message
+    setMessages(prev => [
+      ...prev,
+      { role: 'assistant', text: 'Thinking...' }
+    ]);
 
-    setMessages(prev => {
-      const updated = [...prev];
+    try {
+      const response = await fetch('/api/ask-healthscope', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: q,
+          history: []
+        })
+      });
 
-      updated[updated.length - 1] = {
-        role: "assistant",
-        text: data.answer || "Sorry, I couldn't generate a response right now."
-      };
+      const data = await response.json();
 
-      return updated;
-    });
+      if (!response.ok) {
+        throw new Error(data.error || 'AI request failed');
+      }
 
-  } catch (error) {
-    console.error("HealthScope AI error:", error);
+      // Replace Thinking... with AI response
+      setMessages(prev => {
+        const updated = [...prev];
+        updated[updated.length - 1] = {
+          role: 'assistant',
+          text: data.answer || 'Sorry, I could not generate a response right now.'
+        };
+        return updated;
+      });
 
-    setMessages(prev => {
-      const updated = [...prev];
+    } catch (error) {
+      console.error('HealthScope AI error:', error);
 
-      updated[updated.length - 1] = {
-        role: "assistant",
-        text: "HealthScope AI is temporarily unavailable. Please try again."
-      };
+      setMessages(prev => {
+        const updated = [...prev];
+        updated[updated.length - 1] = {
+          role: 'assistant',
+          text: 'HealthScope AI is temporarily unavailable. Please try again.'
+        };
+        return updated;
+      });
 
-      return updated;
-    });
-  }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="overlay">
+      <div className="chat">
+
+        <header>
+          <b>
+            <Sparkles size={15} />
+            Ask HealthScope
+          </b>
+
+          <button
+            onClick={close}
+            aria-label="Close assistant"
+          >
+            <X size={18} />
+          </button>
+        </header>
+
+        <div className="messages">
+          {messages.map((m, i) => (
+            <div
+              className={`msg ${m.role === 'user' ? 'user' : ''}`}
+              key={i}
+            >
+              {m.text}
+            </div>
+          ))}
+        </div>
+
+        <div className="suggest">
+          {[
+            'What is dietary fiber?',
+            'What does sodium mean?'
+          ].map(q => (
+            <button
+              key={q}
+              onClick={() => setQuestion(q)}
+            >
+              {q}
+            </button>
+          ))}
+        </div>
+
+        <div className="chatinput">
+          <input
+            value={question}
+            onChange={e => setQuestion(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && send()}
+            placeholder={loading ? 'HealthScope is thinking...' : 'Ask something…'}
+            aria-label="Ask HealthScope"
+            disabled={loading}
+          />
+
+          <button
+            onClick={send}
+            disabled={loading}
+            aria-label="Send"
+          >
+            <Send size={17} />
+          </button>
+        </div>
+
+        <small>
+          Educational information only · Not diagnosis or treatment.
+        </small>
+
+      </div>
+    </div>
+  );
 }
     
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}))
