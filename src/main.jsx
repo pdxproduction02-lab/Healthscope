@@ -263,6 +263,20 @@ function LabelResult({ data, reset }) {
   const fiber = numberValue(data.fiber);
   const protein = numberValue(data.protein);
   const sodium = numberValue(data.sodium);
+  const nutritionValues = [
+  data.calories,
+  data.protein,
+  data.carbs,
+  data.sugars,
+  data.fat,
+  data.satFat,
+  data.sodium,
+  data.fiber
+];
+
+const nutritionDetected = nutritionValues.some(
+  value => numberValue(value) !== null
+);
 
   const sugarSignal =
     sugar === null
@@ -317,9 +331,21 @@ function LabelResult({ data, reset }) {
       <section className="resultgrid">
 
         <div className="card pad">
-          <b>Nutrition facts</b>
+  <b>Nutrition facts</b>
 
-          {rows.map(([name, value, unit]) => {
+  {!nutritionDetected && (
+    <div className="nutrition-missing">
+      <Info size={17} />
+      <span>
+        <b>Nutrition information wasn't visible</b>
+        <small>
+          Try scanning the Nutrition Facts panel for calories and nutrient values.
+        </small>
+      </span>
+    </div>
+  )}
+
+  {rows.map(([name, value, unit]) => {
             const missing =
               value === undefined ||
               value === null ||
