@@ -236,8 +236,165 @@ const useDemoLabel = () => {
 }
 
 function LabelResult({ data, reset }) {
-  const rows = [['Calories', data.calories, 'kcal'], ['Protein', data.protein, 'g'], ['Carbohydrates', data.carbs, 'g'], ['Sugars', data.sugars, 'g'], ['Fat', data.fat, 'g'], ['Saturated fat', data.satFat, 'g'], ['Sodium', data.sodium, 'mg'], ['Fiber', data.fiber, 'g']]
-  return <><div className="resulttop"><div><label>EDUCATIONAL SNAPSHOT</label><h2>{data.product}</h2><small>Serving size · {data.serving}</small></div><button className="secondary" onClick={reset}>New label</button></div><section className="resultgrid"><div className="card pad"><b>Nutrition facts</b>{rows.map(row => <div className="nut" key={row[0]}><span>{row[0]}</span><b>{row[1]} <small>{row[2]}</small></b></div>)}</div><div className="card pad"><b>Ingredient explorer</b>{data.ingredients.map((item, i) => <div className="ingredient" key={item}><i>{i + 1}</i><span><b>{item}</b>{ingredientInfo[item] || 'Function can vary by formulation.'}</span></div>)}</div></section><div className="card pad compare"><label>EDUCATIONAL SIGNALS</label><div className="signals"><span>Sugar <b>Moderate</b></span><span>Fiber <b>Present</b></span><span>Protein <b>Moderate</b></span><span>Sodium <b>Moderate</b></span></div><small>Descriptors are not a medical score and do not determine whether a food is right for an individual.</small></div></>
+  const rows = [
+    ['Calories', data.calories, 'kcal'],
+    ['Protein', data.protein, 'g'],
+    ['Carbohydrates', data.carbs, 'g'],
+    ['Sugars', data.sugars, 'g'],
+    ['Fat', data.fat, 'g'],
+    ['Saturated fat', data.satFat, 'g'],
+    ['Sodium', data.sodium, 'mg'],
+    ['Fiber', data.fiber, 'g']
+  ];
+
+  const numberValue = (value) => {
+    if (
+      value === undefined ||
+      value === null ||
+      value === '' ||
+      value === 'Not detected'
+    ) return null;
+
+    const num = parseFloat(value);
+    return Number.isFinite(num) ? num : null;
+  };
+
+  const sugar = numberValue(data.sugars);
+  const fiber = numberValue(data.fiber);
+  const protein = numberValue(data.protein);
+  const sodium = numberValue(data.sodium);
+
+  const sugarSignal =
+    sugar === null
+      ? 'Not listed'
+      : sugar <= 1
+      ? 'Low'
+      : sugar <= 5
+      ? 'Moderate'
+      : 'Higher';
+
+  const fiberSignal =
+    fiber === null
+      ? 'Not listed'
+      : fiber === 0
+      ? 'None listed'
+      : fiber < 3
+      ? 'Some'
+      : 'Present';
+
+  const proteinSignal =
+    protein === null
+      ? 'Not listed'
+      : protein < 3
+      ? 'Small amount'
+      : protein < 10
+      ? 'Moderate'
+      : 'Higher';
+
+  const sodiumSignal =
+    sodium === null
+      ? 'Not listed'
+      : sodium < 120
+      ? 'Lower'
+      : sodium < 400
+      ? 'Moderate'
+      : 'Higher';
+
+  return (
+    <>
+      <div className="resulttop">
+        <div>
+          <label>EDUCATIONAL SNAPSHOT</label>
+          <h2>{data.product}</h2>
+          <small>Serving size · {data.serving}</small>
+        </div>
+
+        <button className="secondary" onClick={reset}>
+          New label
+        </button>
+      </div>
+
+      <section className="resultgrid">
+
+        <div className="card pad">
+          <b>Nutrition facts</b>
+
+          {rows.map(([name, value, unit]) => {
+            const missing =
+              value === undefined ||
+              value === null ||
+              value === '' ||
+              value === 'Not detected';
+
+            return (
+              <div className="nut" key={name}>
+                <span>{name}</span>
+
+                <b>
+                  {missing ? (
+                    <small>Not listed on scanned label</small>
+                  ) : (
+                    <>
+                      {value} <small>{unit}</small>
+                    </>
+                  )}
+                </b>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="card pad">
+          <b>Ingredient explorer</b>
+
+          {data.ingredients.length > 0 ? (
+            data.ingredients.map((item, i) => (
+              <div className="ingredient" key={`${item}-${i}`}>
+                <i>{i + 1}</i>
+
+                <span>
+                  <b>{item}</b>
+                  {ingredientInfo[item] ||
+                    'Function can vary depending on the product formulation.'}
+                </span>
+              </div>
+            ))
+          ) : (
+            <p>No ingredients were detected in the scanned image.</p>
+          )}
+        </div>
+
+      </section>
+
+      <div className="card pad compare">
+        <label>EDUCATIONAL SIGNALS</label>
+
+        <div className="signals">
+          <span>
+            Sugar <b>{sugarSignal}</b>
+          </span>
+
+          <span>
+            Fiber <b>{fiberSignal}</b>
+          </span>
+
+          <span>
+            Protein <b>{proteinSignal}</b>
+          </span>
+
+          <span>
+            Sodium <b>{sodiumSignal}</b>
+          </span>
+        </div>
+
+        <small>
+          These are simple educational descriptions based on values detected
+          from the scanned label. They are not a medical score and do not
+          determine whether a food is right for an individual.
+        </small>
+      </div>
+    </>
+  );
 }
 
 function Learn() {
