@@ -277,7 +277,30 @@ function LabelResult({ data, reset }) {
 const nutritionDetected = nutritionValues.some(
   value => numberValue(value) !== null
 );
+const ingredientCount = Array.isArray(data.ingredients)
+  ? data.ingredients.length
+  : 0;
 
+const productName =
+  data.product && data.product !== 'Not detected'
+    ? data.product
+    : 'this packaged food';
+
+let quickOverview = '';
+
+if (nutritionDetected && ingredientCount > 0) {
+  quickOverview =
+    `This scan shows ${productName}. Nutrition information was detected for the listed serving size, and ${ingredientCount} ingredient${ingredientCount === 1 ? '' : 's'} ${ingredientCount === 1 ? 'was' : 'were'} identified from the visible label.`;
+} else if (nutritionDetected) {
+  quickOverview =
+    `This scan shows ${productName}. Nutrition information was detected for the listed serving size.`;
+} else if (ingredientCount > 0) {
+  quickOverview =
+    `This scan shows ${productName}. Ingredient information was detected, but nutrition values were not visible in the uploaded image.`;
+} else {
+  quickOverview =
+    `This scan shows ${productName}. Limited structured information could be extracted from the uploaded image.`;
+}
   const sugarSignal =
     sugar === null
       ? 'Not listed'
@@ -315,7 +338,16 @@ const nutritionDetected = nutritionValues.some(
       : 'Higher';
 
   return (
-    <>
+    <><div className="quick-overview">
+  <div className="quick-overview-icon">
+    <Sparkles size={18} />
+  </div>
+
+  <div>
+    <label>QUICK OVERVIEW</label>
+    <p>{quickOverview}</p>
+  </div>
+</div>
       <div className="resulttop">
         <div>
           <label>EDUCATIONAL SNAPSHOT</label>
