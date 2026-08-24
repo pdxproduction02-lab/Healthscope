@@ -10,7 +10,44 @@ IMPORTANT RULES:
 - Do not claim a food is universally healthy or unhealthy.
 - This is educational food-label information only.
 
-Return ONLY valid JSON. No markdown. No explanations outside JSON.
+INGREDIENT EXPLANATIONS:
+
+For EVERY detected ingredient, return:
+- name: the ingredient name as written or clearly normalized from the label.
+- explanation: a short, neutral educational explanation of what the ingredient generally is and/or its common role in food.
+
+This must work for ANY ingredient detected on a packaged-food label.
+
+Ingredients may include:
+- whole foods
+- fruits or vegetables
+- grains and flours
+- oils and fats
+- sugars and sweeteners
+- dairy ingredients
+- vitamins and minerals
+- preservatives
+- emulsifiers
+- stabilizers
+- thickeners
+- acidity regulators
+- raising agents
+- flavourings
+- colours
+- additives and INS/E numbers
+
+Do not automatically describe ingredients as healthy, unhealthy, toxic, dangerous, or safe for everyone.
+
+Do not invent a specific function when uncertain. Use neutral wording such as:
+"commonly used for..."
+"may help provide..."
+"generally contributes..."
+
+Keep each explanation concise, usually one sentence.
+
+Return ONLY valid JSON.
+No markdown.
+No explanations outside JSON.
 
 Use exactly this structure:
 
@@ -26,8 +63,10 @@ Use exactly this structure:
   "sodium": "number or Not detected",
   "fiber": "number or Not detected",
   "ingredients": [
-    "Ingredient 1",
-    "Ingredient 2"
+    {
+      "name": "Ingredient name",
+      "explanation": "Short neutral educational explanation"
+    }
   ]
 }
 
@@ -139,31 +178,52 @@ export default async function handler(req, res) {
 
     // Ensure the UI always receives safe values
     const safeData = {
-      product: parsed.product || "Not detected",
-      serving: parsed.serving || "Not detected",
-      calories: parsed.calories || "Not detected",
-      protein: parsed.protein || "Not detected",
-      carbs: parsed.carbs || "Not detected",
-      sugars: parsed.sugars || "Not detected",
-      fat: parsed.fat || "Not detected",
-      satFat: parsed.satFat || "Not detected",
-      sodium: parsed.sodium || "Not detected",
-      fiber: parsed.fiber || "Not detected",
-      ingredients: Array.isArray(parsed.ingredients)
-        ? parsed.ingredients
-        : []
-    };
+  product: parsed.product || "Not detected",
+  serving: parsed.serving || "Not detected",
+  calories: parsed.calories || "Not detected",
+  protein: parsed.protein || "Not detected",
+  carbs: parsed.carbs || "Not detected",
+  sugars: parsed.sugars || "Not detected",
+  fat: parsed.fat || "Not detected",
+  satFat: parsed.satFat || "Not detected",
+  sodium: parsed.sodium || "Not detected",
+  fiber: parsed.fiber || "Not detected",
+
+  ingredients: Array.isArray(parsed.ingredients)
+    ? parsed.ingredients
+        .map(item => {
+          if (item && typeof item === 'object' && item.name) {
+            return {
+              name: String(item.name),
+              explanation: item.explanation
+                ? String(item.explanation)
+                : 'General function may vary depending on the product formulation.'
+            };
+          }
+
+          if (typeof item === 'string') {
+            return {
+              name: item,
+              explanation: 'General function may vary depending on the product formulation.'
+            };
+          }
+
+          return null;
+        })
+        .filter(Boolean)
+    : []
+};
 
     return res.status(200).json({
       data: safeData,
       source: "gemini-vision"
     });
 
-  } catch (error) {
+    } catch (error) {
     console.error("LabelScope AI error:", error);
 
     return res.status(500).json({
       error: "Label analysis failed."
     });
   }
-  }
+}
