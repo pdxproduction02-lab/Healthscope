@@ -349,16 +349,16 @@ function LabelResult({ data, reset }) {
 
           {data.ingredients.length > 0 ? (
             data.ingredients.map((item, i) => (
-              <div className="ingredient" key={`${item}-${i}`}>
-                <i>{i + 1}</i>
+  <div className="ingredient" key={`${item.name}-${i}`}>
+    <i>{i + 1}</i>
 
-                <span>
-                  <b>{item}</b>
-                  {ingredientInfo[item] ||
-                    'Function can vary depending on the product formulation.'}
-                </span>
-              </div>
-            ))
+    <span>
+      <b>{item.name}</b>
+      {item.explanation ||
+        'General function may vary depending on the product formulation.'}
+    </span>
+  </div>
+))
           ) : (
             <p>No ingredients were detected in the scanned image.</p>
           )}
