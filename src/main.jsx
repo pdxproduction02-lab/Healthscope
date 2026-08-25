@@ -314,6 +314,26 @@ const current = todayEntry || {
 
 function Track({ entries, save }) {
   const [sleep, setSleep] = useState(7.5), [water, setWater] = useState(6), [movement, setMovement] = useState(45), [mood, setMood] = useState(4), [energy, setEnergy] = useState(4)
+  const sortedEntries = [...entries].sort((a, b) =>
+  new Date(a.createdAt) - new Date(b.createdAt)
+);
+
+const latestEntry = sortedEntries.at(-1);
+const previousEntry =
+  sortedEntries.length >= 2
+    ? sortedEntries.at(-2)
+    : null;
+
+const hasComparison = latestEntry && previousEntry;
+  const comparison = hasComparison
+  ? {
+      sleep: latestEntry.sleep - previousEntry.sleep,
+      water: latestEntry.water - previousEntry.water,
+      movement: latestEntry.movement - previousEntry.movement,
+      mood: latestEntry.mood - previousEntry.mood,
+      energy: latestEntry.energy - previousEntry.energy
+    }
+  : null;
   const submit = () =>
   save({
     date: new Date().toLocaleDateString('en-US', {
@@ -452,7 +472,72 @@ function Track({ entries, save }) {
               : 'No observations have been recorded yet.'}
           </p>
         </div>
+{hasComparison && (
+  <section className="card comparison-card">
+    <div className="comparison-head">
+      <div>
+        <label>RECENT CHANGE</label>
+        <h2>Compared with your previous entry</h2>
+      </div>
 
+      <BarChart3 size={22} />
+    </div>
+
+    <p className="comparison-note">
+      These are changes between your two most recent self-entered wellness
+      records.
+    </p>
+
+    <div className="comparison-grid">
+
+      <div className="comparison-item">
+        <span>🌙 Sleep</span>
+        <b>
+          {comparison.sleep > 0 ? '+' : ''}
+          {comparison.sleep.toFixed(1)} h
+        </b>
+      </div>
+
+      <div className="comparison-item">
+        <span>💧 Water</span>
+        <b>
+          {comparison.water > 0 ? '+' : ''}
+          {comparison.water} glasses
+        </b>
+      </div>
+
+      <div className="comparison-item">
+        <span>🚶 Movement</span>
+        <b>
+          {comparison.movement > 0 ? '+' : ''}
+          {comparison.movement} min
+        </b>
+      </div>
+
+      <div className="comparison-item">
+        <span>🙂 Mood</span>
+        <b>
+          {comparison.mood > 0 ? '+' : ''}
+          {comparison.mood}
+        </b>
+      </div>
+
+      <div className="comparison-item">
+        <span>⚡ Energy</span>
+        <b>
+          {comparison.energy > 0 ? '+' : ''}
+          {comparison.energy}
+        </b>
+      </div>
+
+    </div>
+
+    <small>
+      A change is not automatically better or worse. It is simply a comparison
+      of your own recorded observations.
+    </small>
+  </section>
+)}
       </section><section className="history-section">
   <div className="section">
     <div>
