@@ -314,6 +314,9 @@ const current = todayEntry || {
 
 function Track({ entries, save }) {
   const [sleep, setSleep] = useState(7.5), [water, setWater] = useState(6), [movement, setMovement] = useState(45), [mood, setMood] = useState(4), [energy, setEnergy] = useState(4)
+  const [overview, setOverview] = useState('');
+const [overviewLoading, setOverviewLoading] = useState(false);
+const [overviewError, setOverviewError] = useState('');
   const sortedEntries = [...entries].sort((a, b) =>
   new Date(a.createdAt) - new Date(b.createdAt)
 );
@@ -573,7 +576,75 @@ const hasComparison = latestEntry && previousEntry;
 </div>
   </section>
 )}
-      </section><section className="history-section">
+      </section><section className="card ai-overview">
+  <div className="ai-overview-head">
+    <div className="ai-overview-icon">
+      <Sparkles size={21} />
+    </div>
+
+    <div>
+      <label>AI WELLNESS OVERVIEW</label>
+      <h2>Your personal wellness pattern</h2>
+    </div>
+  </div>
+
+  <p className="ai-overview-intro">
+    Generate a short educational overview based only on your self-entered
+    wellness history.
+  </p>
+
+  {entries.length === 0 ? (
+    <div className="ai-overview-empty">
+      <p>Save your first wellness entry to start building a personal overview.</p>
+    </div>
+  ) : (
+    <>
+      {!overview && !overviewLoading && (
+        <button
+          className="primary"
+          onClick={() => {
+            setOverview('');
+            setOverviewError('');
+          }}
+        >
+          <Sparkles size={17} />
+          Generate overview
+        </button>
+      )}
+
+      {overviewLoading && (
+        <div className="ai-overview-loading">
+          <Sparkles size={18} />
+          <span>HealthScope is reviewing your logged patterns…</span>
+        </div>
+      )}
+
+      {overviewError && (
+        <div className="ai-overview-error">
+          {overviewError}
+        </div>
+      )}
+
+      {overview && (
+        <div className="ai-overview-result">
+          <p>{overview}</p>
+
+          <button
+            className="secondary"
+            onClick={() => setOverview('')}
+          >
+            Generate again
+          </button>
+        </div>
+      )}
+    </>
+  )}
+
+  <small className="ai-overview-note">
+    Educational pattern summary only. This does not diagnose conditions or
+    replace professional medical advice.
+  </small>
+</section><section className="history-section">
   <div className="section">
     <div>
       <label>YOUR HISTORY</label>
