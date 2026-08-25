@@ -317,6 +317,49 @@ function Track({ entries, save }) {
   const [overview, setOverview] = useState('');
 const [overviewLoading, setOverviewLoading] = useState(false);
 const [overviewError, setOverviewError] = useState('');
+  const generateOverview = async () => {
+  if (!entries.length) return;
+
+  setOverviewLoading(true);
+  setOverviewError('');
+  setOverview('');
+
+  try {
+    const response = await fetch('/api/wellness-overview', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        entries
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || 'Unable to generate wellness overview.'
+      );
+    }
+
+    if (!result.overview) {
+      throw new Error('No wellness overview was returned.');
+    }
+
+    setOverview(result.overview);
+
+  } catch (error) {
+    console.error('Wellness overview error:', error);
+
+    setOverviewError(
+      error.message || 'Unable to generate wellness overview.'
+    );
+
+  } finally {
+    setOverviewLoading(false);
+  }
+};
   const sortedEntries = [...entries].sort((a, b) =>
   new Date(a.createdAt) - new Date(b.createdAt)
 );
@@ -602,10 +645,7 @@ const hasComparison = latestEntry && previousEntry;
       {!overview && !overviewLoading && (
         <button
           className="primary"
-          onClick={() => {
-            setOverview('');
-            setOverviewError('');
-          }}
+          onClick={generateOverview}
         >
           <Sparkles size={17} />
           Generate overview
@@ -631,7 +671,7 @@ const hasComparison = latestEntry && previousEntry;
 
           <button
             className="secondary"
-            onClick={() => setOverview('')}
+            onClick={generateOverview}
           >
             Generate again
           </button>
