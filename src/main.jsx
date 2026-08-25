@@ -139,7 +139,23 @@ function App() {
       </div>
     </main>
     <div className="bottom">
-      {[['home', Home, 'Home'], ['track', BarChart3, 'Track'], ['label', ScanLine, 'Label'], ['learn', BookOpen, 'Learn'], ['profile', UserRound, 'Profile']].map(([id, Icon, label]) => <button className={page === id ? 'active' : ''} onClick={() => nav(id)} key={id}><Icon size={19} /><small>{label}</small></button>)}
+      {[
+  ['home', Home, 'Home'],
+  ['track', BarChart3, 'Track'],
+  ['label', ScanLine, 'Label'],
+  ['learn', BookOpen, 'Learn'],
+  ['reminders', Bell, 'Reminders'],
+  ['profile', UserRound, 'Profile']
+].map(([id, Icon, label]) =>
+  <button
+    className={page === id ? 'active' : ''}
+    onClick={() => nav(id)}
+    key={id}
+  >
+    <Icon size={19} />
+    <small>{label}</small>
+  </button>
+)} => <button className={page === id ? 'active' : ''} onClick={() => nav(id)} key={id}><Icon size={19} /><small>{label}</small></button>)}
     </div>
     {chatOpen && <Chat close={() => setChatOpen(false)} />}
     {toast && <div className="toast"><Check size={15} />{toast}</div>}
