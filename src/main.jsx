@@ -134,6 +134,7 @@ function App() {
         {page === 'track' && <Track entries={entries} save={saveEntry} />}
         {page === 'label' && <LabelScope data={labelData} setData={setLabelData} done={() => setToast('Label ready')} />}
         {page === 'learn' && <Learn />}
+        {page === 'reminders' && <Reminders />}
         {page === 'profile' && <Profile dark={dark} setDark={setDark} clear={clearLocal} />}
       </div>
     </main>
