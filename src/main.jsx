@@ -124,7 +124,7 @@ function App() {
       <NavButton active={page === 'track'} icon={BarChart3} label="Track" onClick={() => nav('track')} />
       <NavButton active={page === 'label'} icon={ScanLine} label="LabelScope" onClick={() => nav('label')} />
       <NavButton active={page === 'learn'} icon={BookOpen} label="Learn" onClick={() => nav('learn')} />
-      
+      <NavButton active={page === 'reminders'} icon={Bell} label="Reminders" onClick={() => nav('reminders')} />
       <NavButton active={page === 'profile'} icon={UserRound} label="Profile" onClick={() => nav('profile')} />
     </nav><button className="ask" onClick={() => setChatOpen(true)}><Sparkles size={17} />Ask HealthScope</button><small><ShieldCheck size={14} />Privacy-first</small></aside>
     <main className="main">
