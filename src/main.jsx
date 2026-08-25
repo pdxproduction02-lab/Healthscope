@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
   Activity, BarChart3, BookOpen, Camera, Check, ChevronRight, Droplets, Home,
-  Info, Leaf, MessageCircle, Moon, Plus, ScanLine, Send, ShieldCheck, Sparkles,
+  Info, Leaf, MessageCircle, Moon, Plus, ScanLine, Send, ShieldCheck, Sparkles, Bell,
   Sun, Trash2, Upload, UserRound, Utensils, X, Zap
 } from 'lucide-react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
