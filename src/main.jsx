@@ -48,7 +48,7 @@ function Brand() { return <div className="brand"><Logo /><div><b>HealthScope</b>
 
 function App() {
   const [page, setPage] = useState('home')
-  const [entries, setEntries] = useLocal('hs_entries', seed)
+  const [entries, setEntries] = useLocal('hs_entries', [])
   const [dark, setDark] = useLocal('hs_dark', false)
   const [chatOpen, setChatOpen] = useState(false)
   const [toast, setToast] = useState('')
@@ -62,12 +62,37 @@ function App() {
   }, [toast])
 
   const nav = (next) => { setPage(next); window.scrollTo({ top: 0, behavior: 'smooth' }) }
-  const saveEntry = (entry) => { setEntries([...entries, entry]); setToast('Wellness entry saved') }
+  
   const clearLocal = () => {
     localStorage.removeItem('hs_entries'); localStorage.removeItem('hs_dark')
     setEntries([]); setLabelData(null); setToast('Local demo data cleared')
   }
+  const saveEntry = (entry) => {
+  const today = new Date().toISOString().slice(0, 10);
 
+  const newEntry = {
+    ...entry,
+    id: today,
+    createdAt: new Date().toISOString()
+  };
+
+  setEntries(prev => {
+    const existingIndex = prev.findIndex(item => item.id === today);
+
+    if (existingIndex >= 0) {
+      const updated = [...prev];
+      updated[existingIndex] = {
+        ...updated[existingIndex],
+        ...newEntry
+      };
+      return updated;
+    }
+
+    return [...prev, newEntry];
+  });
+
+  setToast('Today’s wellness entry saved');
+};
   return <div className="app">
     <aside><Brand /><nav>
       <NavButton active={page === 'home'} icon={Home} label="Home" onClick={() => nav('home')} />
@@ -101,12 +126,145 @@ function Metric({ icon: Icon, name, value }) { return <div className="card metri
 function Action({ icon: Icon, title, description, onClick, hot }) { return <button className={`action ${hot ? 'hot' : ''}`} onClick={onClick}><i><Icon size={19} /></i><div><b>{title}</b><small>{description}</small></div><ChevronRight size={16} /></button> }
 
 function HomePage({ nav, entries, ask }) {
-  const current = entries.at(-1) || seed.at(-1)
+  const current = entries.at(-1) || {
+  sleep: 0,
+  water: 0,
+  movement: 0,
+  mood: 0,
+  energy: 0
+  }
   return <>
     <section className="hero"><div><label>WELLNESS SNAPSHOT · DEMO</label><h1>Understand your everyday wellness.</h1><p>Track simple patterns, explore food labels, and learn health information without the medical jargon.</p></div><div className="badge"><Sparkles size={19} />Education, not diagnosis.</div></section>
-    <section className="metrics"><Metric icon={Moon} name="Sleep" value={`${current.sleep.toFixed(1)}h`} /><Metric icon={Droplets} name="Water" value={`${current.water}/8`} /><Metric icon={Activity} name="Movement" value={`${current.movement} min`} /><Metric icon={Zap} name="Energy" value={`${current.energy}/5`} /></section>
+    <section className="metrics">
+  <Metric
+    icon={Moon}
+    name="Sleep"
+    value={entries.length ? `${current.sleep.toFixed(1)}h` : '—'}
+  />
+  <Metric
+    icon={Droplets}
+    name="Water"
+    value={entries.length ? `${current.water}/8` : '—'}
+  />
+  <Metric
+    icon={Activity}
+    name="Movement"
+    value={entries.length ? `${current.movement} min` : '—'}
+  />
+  <Metric
+    icon={Zap}
+    name="Energy"
+    value={entries.length ? `${current.energy}/5` : '—'}
+  />
+</section>
     <div className="section"><div><label>RECENT PATTERN</label><h2>A quick look at your entries</h2></div><button className="link" onClick={() => nav('track')}>Open tracker <ChevronRight size={15} /></button></div>
-    <section className="dash"><div className="card chart"><b>Sleep trend</b><small>Last 7 logged days</small><ResponsiveContainer width="100%" height="88%"><AreaChart data={entries.length ? entries : seed}><defs><linearGradient id="sleepFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#23b7a3" stopOpacity=".3" /><stop offset="1" stopColor="#23b7a3" stopOpacity="0" /></linearGradient></defs><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--line)" /><XAxis dataKey="date" tickLine={false} axisLine={false} /><YAxis domain={[5, 9]} tickLine={false} axisLine={false} /><Tooltip /><Area type="monotone" dataKey="sleep" stroke="#23b7a3" fill="url(#sleepFill)" strokeWidth={3} /></AreaChart></ResponsiveContainer></div><div className="card insight"><Sparkles size={20} /><label>HEALTHSCOPE INSIGHT</label><h3>Your logged sleep looks fairly consistent.</h3><p>Your recent entries show a simple personal pattern. Consistent routines can support general wellbeing.</p><small>Based only on self-entered data.</small></div></section>
+    <section className="dash">
+
+  <div className="card chart">
+    <b>Sleep trend</b>
+
+    <small>
+      {entries.length
+        ? 'Your logged wellness history'
+        : 'Start logging to build your personal trend'}
+    </small>
+
+    {entries.length > 0 ? (
+      <ResponsiveContainer width="100%" height="88%">
+        <AreaChart data={entries}>
+          <defs>
+            <linearGradient id="sleepFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#23b7a3" stopOpacity=".3" />
+              <stop offset="1" stopColor="#23b7a3" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+
+          <CartesianGrid
+            strokeDasharray="3 3"
+            vertical={false}
+            stroke="var(--line)"
+          />
+
+          <XAxis
+            dataKey="date"
+            tickLine={false}
+            axisLine={false}
+          />
+
+          <YAxis
+            domain={[3, 12]}
+            tickLine={false}
+            axisLine={false}
+          />
+
+          <Tooltip />
+
+          <Area
+            type="monotone"
+            dataKey="sleep"
+            stroke="#23b7a3"
+            fill="url(#sleepFill)"
+            strokeWidth={3}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    ) : (
+      <div className="chart-empty">
+        <Moon size={26} />
+        <b>No wellness history yet</b>
+        <span>
+          Save your first daily entry to start building your personal trend.
+        </span>
+        <button
+          className="secondary"
+          onClick={() => nav('track')}
+        >
+          Log today's wellness
+        </button>
+      </div>
+    )}
+  </div>
+
+  <div className="card insight">
+  <Sparkles size={20} />
+
+  <label>HEALTHSCOPE INSIGHT</label>
+
+  {entries.length === 0 ? (
+    <>
+      <h3>Your personal wellness story starts here.</h3>
+      <p>
+        Add your first wellness entry to begin building a genuine record of
+        your everyday habits.
+      </p>
+      <small>
+        Insights are based only on information you choose to record.
+      </small>
+    </>
+  ) : entries.length === 1 ? (
+    <>
+      <h3>Your first wellness entry is saved.</h3>
+      <p>
+        Keep logging over time to see patterns in your own self-entered
+        wellness history.
+      </p>
+      <small>Based only on your recorded data.</small>
+    </>
+  ) : (
+    <>
+      <h3>You’re building your personal wellness history.</h3>
+      <p>
+        HealthScope can compare your self-entered observations over time and
+        help you understand simple patterns.
+      </p>
+      <small>
+        Educational information only · Not a medical assessment.
+      </small>
+    </>
+  )}
+</div>
+
+</section>
     <div className="section"><div><label>EXPLORE</label><h2>Make the next step useful.</h2></div></div>
     <section className="actions"><Action icon={BarChart3} title="Log wellness" description="Add simple daily observations." onClick={() => nav('track')} /><Action icon={ScanLine} title="Scan a label" description="Explore nutrition and ingredients." onClick={() => nav('label')} hot /><Action icon={MessageCircle} title="Ask HealthScope" description="Get a clear educational explanation." onClick={ask} /><Action icon={BookOpen} title="Explore Learn" description="Build practical health literacy." onClick={() => nav('learn')} /></section>
     <Disclaimer />
@@ -115,8 +273,148 @@ function HomePage({ nav, entries, ask }) {
 
 function Track({ entries, save }) {
   const [sleep, setSleep] = useState(7.5), [water, setWater] = useState(6), [movement, setMovement] = useState(45), [mood, setMood] = useState(4), [energy, setEnergy] = useState(4)
-  const submit = () => save({ date: new Date().toLocaleDateString('en-US', { weekday: 'short' }), sleep, water, movement, mood, energy })
-  return <><Title k="TRACK" h="Your wellness, your way." p="Log simple everyday observations. Nothing here is a medical measurement." /><section className="trackgrid"><div className="card form"><Control icon={Moon} name="Sleep duration" value={`${sleep.toFixed(1)} hours`}><input type="range" min="3" max="12" step=".1" value={sleep} onChange={e => setSleep(+e.target.value)} /></Control><Control icon={Droplets} name="Water intake" value={`${water}/8 glasses`}><input type="range" min="0" max="12" value={water} onChange={e => setWater(+e.target.value)} /></Control><Control icon={Activity} name="Movement" value={`${movement} minutes`}><input type="range" min="0" max="180" value={movement} onChange={e => setMovement(+e.target.value)} /></Control><Scale name="Mood" value={mood} setValue={setMood} /><Scale name="Energy" value={energy} setValue={setEnergy} /><button className="primary" onClick={submit}><Plus size={17} />Save entry</button></div><div className="card chartbox"><b>Movement trend</b><small>Self-entered observations</small><ResponsiveContainer width="100%" height="80%"><AreaChart data={entries.length ? entries : seed}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--line)" /><XAxis dataKey="date" axisLine={false} tickLine={false} /><YAxis axisLine={false} tickLine={false} /><Tooltip /><Area type="monotone" dataKey="movement" stroke="#23b7a3" fill="#23b7a3" fillOpacity=".1" strokeWidth={3} /></AreaChart></ResponsiveContainer><p><b>Observed:</b> your recent movement entries vary across days. This is a personal log, not a clinical assessment.</p></div></section></>
+  const submit = () =>
+  save({
+    date: new Date().toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric'
+    }),
+    sleep,
+    water,
+    movement,
+    mood,
+    energy
+    });
+
+  return (
+    <>
+      <Title
+        k="TRACK"
+        h="Your wellness, your way."
+        p="Log simple everyday observations. Nothing here is a medical measurement."
+      />
+
+      <section className="trackgrid">
+
+        <div className="card form">
+
+          <Control
+            icon={Moon}
+            name="Sleep duration"
+            value={`${sleep.toFixed(1)} hours`}
+          >
+            <input
+              type="range"
+              min="3"
+              max="12"
+              step=".1"
+              value={sleep}
+              onChange={e => setSleep(+e.target.value)}
+            />
+          </Control>
+
+          <Control
+            icon={Droplets}
+            name="Water intake"
+            value={`${water}/8 glasses`}
+          >
+            <input
+              type="range"
+              min="0"
+              max="12"
+              value={water}
+              onChange={e => setWater(+e.target.value)}
+            />
+          </Control>
+
+          <Control
+            icon={Activity}
+            name="Movement"
+            value={`${movement} minutes`}
+          >
+            <input
+              type="range"
+              min="0"
+              max="180"
+              value={movement}
+              onChange={e => setMovement(+e.target.value)}
+            />
+          </Control>
+
+          <Scale name="Mood" value={mood} setValue={setMood} />
+
+          <Scale name="Energy" value={energy} setValue={setEnergy} />
+
+          <button className="primary" onClick={submit}>
+            <Plus size={17} />
+            Save entry
+          </button>
+
+        </div>
+
+        <div className="card chartbox">
+          <b>Movement trend</b>
+
+          <small>
+            {entries.length
+              ? 'Your self-entered observations'
+              : 'Your trend will appear after you save entries'}
+          </small>
+
+          {entries.length > 0 ? (
+            <ResponsiveContainer width="100%" height="80%">
+              <AreaChart data={entries}>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="var(--line)"
+                />
+
+                <XAxis
+                  dataKey="date"
+                  axisLine={false}
+                  tickLine={false}
+                />
+
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                />
+
+                <Tooltip />
+
+                <Area
+                  type="monotone"
+                  dataKey="movement"
+                  stroke="#23b7a3"
+                  fill="#23b7a3"
+                  fillOpacity=".1"
+                  strokeWidth={3}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="chart-empty">
+              <Activity size={26} />
+              <b>No movement history yet</b>
+              <span>
+                Save your first wellness entry to begin tracking your activity
+                pattern.
+              </span>
+            </div>
+          )}
+
+          <p>
+            <b>Observed:</b>{' '}
+            {entries.length
+              ? 'These values come only from your self-entered wellness records.'
+              : 'No observations have been recorded yet.'}
+          </p>
+        </div>
+
+      </section>
+    </>
+  );
 }
 function Control({ icon: Icon, name, value, children }) { return <div className="control"><div><span><Icon size={16} />{name}</span><b>{value}</b></div>{children}</div> }
 function Scale({ name, value, setValue }) { return <div className="control"><div><span><Sun size={16} />{name}</span><b>{value}/5</b></div><div className="scale">{[1, 2, 3, 4, 5].map(x => <button className={x === value ? 'sel' : ''} onClick={() => setValue(x)} key={x}>{x}</button>)}</div></div> }
