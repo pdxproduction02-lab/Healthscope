@@ -453,7 +453,52 @@ function Track({ entries, save }) {
           </p>
         </div>
 
-      </section>
+      </section><section className="history-section">
+  <div className="section">
+    <div>
+      <label>YOUR HISTORY</label>
+      <h2>Wellness entries over time</h2>
+    </div>
+  </div>
+
+  {entries.length === 0 ? (
+    <div className="card history-empty">
+      <BookOpen size={26} />
+      <b>No wellness history yet</b>
+      <p>
+        Your saved daily observations will appear here as you build your
+        personal wellness history.
+      </p>
+    </div>
+  ) : (
+    <div className="history-list">
+      {[...entries].reverse().map((entry) => (
+        <div className="card history-item" key={entry.id}>
+          <div className="history-date">
+            <b>{entry.date}</b>
+            <small>
+              {entry.id ===
+              [
+                new Date().getFullYear(),
+                String(new Date().getMonth() + 1).padStart(2, '0'),
+                String(new Date().getDate()).padStart(2, '0')
+              ].join('-')
+                ? 'Today'
+                : 'Saved entry'}
+            </small>
+          </div>
+
+          <div className="history-values">
+            <span>🌙 {entry.sleep.toFixed(1)}h</span>
+            <span>💧 {entry.water}/8</span>
+            <span>🚶 {entry.movement} min</span>
+            <span>⚡ {entry.energy}/5</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</section>
     </>
   );
 }
