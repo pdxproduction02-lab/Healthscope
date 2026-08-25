@@ -532,10 +532,45 @@ const hasComparison = latestEntry && previousEntry;
 
     </div>
 
-    <small>
-      A change is not automatically better or worse. It is simply a comparison
-      of your own recorded observations.
-    </small>
+    <div className="comparison-summary">
+  {comparison.sleep !== 0 && (
+    <p>
+      You logged{' '}
+      <b>{Math.abs(comparison.sleep).toFixed(1)} hours {comparison.sleep > 0 ? 'more' : 'less'}</b>
+      {' '}of sleep than your previous entry.
+    </p>
+  )}
+
+  {comparison.water !== 0 && (
+    <p>
+      You logged{' '}
+      <b>{Math.abs(comparison.water)} {Math.abs(comparison.water) === 1 ? 'glass' : 'glasses'} {comparison.water > 0 ? 'more' : 'less'}</b>
+      {' '}of water than your previous entry.
+    </p>
+  )}
+
+  {comparison.movement !== 0 && (
+    <p>
+      You logged{' '}
+      <b>{Math.abs(comparison.movement)} minutes {comparison.movement > 0 ? 'more' : 'less'}</b>
+      {' '}of movement than your previous entry.
+    </p>
+  )}
+
+  {comparison.sleep === 0 &&
+    comparison.water === 0 &&
+    comparison.movement === 0 && (
+      <p>
+        Your sleep, water, and movement entries were the same as your
+        previous record.
+      </p>
+    )}
+
+  <small>
+    A change is not automatically better or worse. It simply reflects
+    differences between your own recorded observations.
+  </small>
+</div>
   </section>
 )}
       </section><section className="history-section">
