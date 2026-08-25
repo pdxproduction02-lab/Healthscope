@@ -351,3 +351,125 @@
   line-height: 1.45;
   opacity: 0.6;
 }
+/* =========================
+   REMINDERS — PREMIUM FORM
+========================= */
+
+.reminder-form-card {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.reminder-form-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.reminder-form-heading label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.reminder-form-heading h2 {
+  margin: 0;
+}
+
+.reminder-form-heading svg {
+  color: var(--accent);
+  opacity: 0.9;
+}
+
+.reminder-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.reminder-form > label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.reminder-form input,
+.reminder-form select {
+  width: 100%;
+  min-height: 46px;
+  box-sizing: border-box;
+
+  background: var(--bg);
+  color: var(--text);
+
+  border: 1px solid var(--line);
+  border-radius: 12px;
+
+  padding: 0 14px;
+
+  font: inherit;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.reminder-form input::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.reminder-form input:focus,
+.reminder-form select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(35, 183, 163, 0.12);
+}
+
+.reminder-form button.primary {
+  grid-column: 1 / -1;
+  width: fit-content;
+  min-width: 180px;
+  min-height: 48px;
+  margin-top: 4px;
+}
+
+/* Mobile reminder layout */
+
+@media (max-width: 700px) {
+  .reminder-form {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .reminder-form button.primary {
+    width: 100%;
+  }
+
+  .reminder-form-heading {
+    margin-bottom: 22px;
+  }
+}
+@media (max-width: 700px) {
+  .bottom {
+    display: flex;
+    align-items: stretch;
+    overflow-x: auto;
+    gap: 4px;
+    padding: 8px;
+  }
+
+  .bottom button {
+    flex: 0 0 72px;
+    min-width: 72px;
+  }
+}
