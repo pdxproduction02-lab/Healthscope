@@ -68,12 +68,22 @@ function App() {
     setEntries([]); setLabelData(null); setToast('Local demo data cleared')
   }
   const saveEntry = (entry) => {
-  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+
+  const today = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, '0'),
+    String(now.getDate()).padStart(2, '0')
+  ].join('-');
 
   const newEntry = {
     ...entry,
     id: today,
-    createdAt: new Date().toISOString()
+    date: now.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric'
+    }),
+    createdAt: now.toISOString()
   };
 
   setEntries(prev => {
@@ -81,17 +91,14 @@ function App() {
 
     if (existingIndex >= 0) {
       const updated = [...prev];
-      updated[existingIndex] = {
-        ...updated[existingIndex],
-        ...newEntry
-      };
+      updated[existingIndex] = newEntry;
       return updated;
     }
 
     return [...prev, newEntry];
   });
 
-  setToast('Today’s wellness entry saved');
+  setToast('Wellness entry saved');
 };
   return <div className="app">
     <aside><Brand /><nav>
