@@ -45,21 +45,133 @@ function useLocal(key, initial) {
 
 function Logo() { return <div className="logo"><ScanLine size={18} /></div> }
 function Brand() { return <div className="brand"><Logo /><div><b>HealthScope</b><small>Understand. Track. Stay Informed.</small></div></div> }
-function Reminders() {
+function Reminders({ reminders, setReminders, notify }) {
+  const [title, setTitle] = useState('');
+  const [type, setType] = useState('water');
+  const [time, setTime] = useState('09:00');
+  const [frequency, setFrequency] = useState('daily');
+  const [day, setDay] = useState('Monday');
+
+  const addReminder = (e) => {
+    e.preventDefault();
+
+    if (!title.trim()) return;
+
+    const newReminder = {
+      id: Date.now().toString(),
+      title: title.trim(),
+      type,
+      time,
+      frequency,
+      day: frequency === 'weekly' ? day : null,
+      createdAt: new Date().toISOString(),
+      completed: false
+    };
+
+    setReminders([...reminders, newReminder]);
+
+    setTitle('');
+    setType('water');
+    setTime('09:00');
+    setFrequency('daily');
+    setDay('Monday');
+
+    notify('Reminder saved');
+  };
+
   return (
     <>
       <Title
         k="REMINDERS"
         h="Stay on schedule."
-        p="Create reminders for water, medicines, and other important routines."
+        p="Create reminders for water, medicines, and important routines."
       />
 
-      <div className="card pad">
-        <h2>Reminders coming next 🔔</h2>
-        <p>
-          Your reminder system will appear here.
-        </p>
-      </div>
+      <section className="card pad reminder-form-card">
+        <div className="reminder-form-heading">
+          <div>
+            <label>NEW REMINDER</label>
+            <h2>Create a reminder</h2>
+          </div>
+          <Bell size={22} />
+        </div>
+
+        <form onSubmit={addReminder} className="reminder-form">
+
+          <label>
+            Reminder name
+            <input
+              type="text"
+              placeholder="e.g. Drink water"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              maxLength={60}
+            />
+          </label>
+
+          <label>
+            Reminder type
+            <select
+              value={type}
+              onChange={(e) => {
+                setType(e.target.value);
+
+                if (e.target.value === 'water' && !title) {
+                  setTitle('Drink water');
+                }
+              }}
+            >
+              <option value="water">💧 Water</option>
+              <option value="medicine">💊 Medicine</option>
+              <option value="custom">🔔 Custom</option>
+            </select>
+          </label>
+
+          <label>
+            Time
+            <input
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+            />
+          </label>
+
+          <label>
+            Repeat
+            <select
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value)}
+            >
+              <option value="once">Once</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+            </select>
+          </label>
+
+          {frequency === 'weekly' && (
+            <label>
+              Day
+              <select
+                value={day}
+                onChange={(e) => setDay(e.target.value)}
+              >
+                <option>Monday</option>
+                <option>Tuesday</option>
+                <option>Wednesday</option>
+                <option>Thursday</option>
+                <option>Friday</option>
+                <option>Saturday</option>
+                <option>Sunday</option>
+              </select>
+            </label>
+          )}
+
+          <button className="primary" type="submit">
+            <Plus size={17} />
+            Save reminder
+          </button>
+        </form>
+      </section>
     </>
   );
 }
@@ -135,7 +247,13 @@ function App() {
         {page === 'track' && <Track entries={entries} save={saveEntry} />}
         {page === 'label' && <LabelScope data={labelData} setData={setLabelData} done={() => setToast('Label ready')} />}
         {page === 'learn' && <Learn />}
-        {page === 'reminders' && <Reminders />}
+        {page === 'reminders' && (
+  <Reminders
+    reminders={reminders}
+    setReminders={setReminders}
+    notify={setToast}
+  />
+)}
         {page === 'profile' && <Profile dark={dark} setDark={setDark} clear={clearLocal} />}
       </div>
     </main>
