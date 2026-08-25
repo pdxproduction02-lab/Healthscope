@@ -172,6 +172,70 @@ function Reminders({ reminders, setReminders, notify }) {
           </button>
         </form>
       </section>
+      <section className="reminders-list">
+        <div className="section">
+          <div>
+            <label>YOUR REMINDERS</label>
+            <h2>Saved schedules</h2>
+          </div>
+        </div>
+
+        {reminders.length === 0 ? (
+          <div className="card pad reminder-empty">
+            <Bell size={24} />
+            <h3>No reminders yet</h3>
+            <p>Create your first reminder above to keep your routine organized.</p>
+          </div>
+        ) : (
+          <div className="reminder-cards">
+            {reminders.map((reminder) => (
+              <div className="card reminder-item" key={reminder.id}>
+                <div className="reminder-icon">
+                  {reminder.type === 'water'
+                    ? '💧'
+                    : reminder.type === 'medicine'
+                      ? '💊'
+                      : '🔔'}
+                </div>
+
+                <div className="reminder-info">
+                  <b>{reminder.title}</b>
+
+                  <small>
+                    {reminder.frequency === 'once'
+                      ? `Once at ${reminder.time}`
+                      : reminder.frequency === 'daily'
+                        ? `Every day at ${reminder.time}`
+                        : `Every ${reminder.day} at ${reminder.time}`}
+                  </small>
+                </div>
+
+                <div className="reminder-time">
+                  <b>
+                    {new Date(`2000-01-01T${reminder.time}`)
+                      .toLocaleTimeString([], {
+                        hour: 'numeric',
+                        minute: '2-digit'
+                      })}
+                  </b>
+
+                  <small>
+                    {reminder.frequency === 'once'
+                      ? 'Once'
+                      : reminder.frequency === 'daily'
+                        ? 'Daily'
+                        : 'Weekly'}
+                  </small>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+    </>
+  );
+}
     </>
   );
 }
