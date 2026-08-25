@@ -133,15 +133,49 @@ function Metric({ icon: Icon, name, value }) { return <div className="card metri
 function Action({ icon: Icon, title, description, onClick, hot }) { return <button className={`action ${hot ? 'hot' : ''}`} onClick={onClick}><i><Icon size={19} /></i><div><b>{title}</b><small>{description}</small></div><ChevronRight size={16} /></button> }
 
 function HomePage({ nav, entries, ask }) {
-  const current = entries.at(-1) || {
+  const now = new Date();
+
+const todayId = [
+  now.getFullYear(),
+  String(now.getMonth() + 1).padStart(2, '0'),
+  String(now.getDate()).padStart(2, '0')
+].join('-');
+
+const todayEntry = entries.find(entry => entry.id === todayId);
+
+const current = todayEntry || {
   sleep: 0,
   water: 0,
   movement: 0,
   mood: 0,
   energy: 0
-  }
+};
   return <>
     <section className="hero"><div><label>WELLNESS SNAPSHOT · DEMO</label><h1>Understand your everyday wellness.</h1><p>Track simple patterns, explore food labels, and learn health information without the medical jargon.</p></div><div className="badge"><Sparkles size={19} />Education, not diagnosis.</div></section>
+    {!todayEntry && (
+  <section className="newday card">
+    <div className="newday-icon">
+      <Sun size={24} />
+    </div>
+
+    <div className="newday-content">
+      <label>NEW DAY</label>
+      <h2>New day, new energy.</h2>
+      <p>
+        What would you like to focus on today? Start with a few simple
+        wellness observations and build your personal history over time.
+      </p>
+    </div>
+
+    <button
+      className="primary"
+      onClick={() => nav('track')}
+    >
+      Start today's log
+      <ChevronRight size={17} />
+    </button>
+  </section>
+)}
     <section className="metrics">
   <Metric
     icon={Moon}
