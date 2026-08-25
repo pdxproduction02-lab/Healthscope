@@ -139,29 +139,28 @@ function App() {
       </div>
     </main>
     <div className="bottom">
-      {[
-  ['home', Home, 'Home'],
-  ['track', BarChart3, 'Track'],
-  ['label', ScanLine, 'Label'],
-  ['learn', BookOpen, 'Learn'],
-  ['reminders', Bell, 'Reminders'],
-  ['profile', UserRound, 'Profile']
-].map(([id, Icon, label]) =>
-  <button
-    className={page === id ? 'active' : ''}
-    onClick={() => nav(id)}
-    key={id}
-  >
-    <Icon size={19} />
-    <small>{label}</small>
-  </button>
-)} => <button className={page === id ? 'active' : ''} onClick={() => nav(id)} key={id}><Icon size={19} /><small>{label}</small></button>)}
-    </div>
-    {chatOpen && <Chat close={() => setChatOpen(false)} />}
-    {toast && <div className="toast"><Check size={15} />{toast}</div>}
-  </div>
+  {[
+    ['home', Home, 'Home'],
+    ['track', BarChart3, 'Track'],
+    ['label', ScanLine, 'Label'],
+    ['learn', BookOpen, 'Learn'],
+    ['reminders', Bell, 'Reminders'],
+    ['profile', UserRound, 'Profile']
+  ].map(([id, Icon, label]) => (
+    <button
+      className={page === id ? 'active' : ''}
+      onClick={() => nav(id)}
+      key={id}
+    >
+      <Icon size={19} />
+      <small>{label}</small>
+    </button>
+  ))}
+</div>
+ {chatOpen && <Chat close={() => setChatOpen(false)} />}
+{toast && <div className="toast"><Check size={15} />{toast}</div>}
+</div>
 }
-
 function NavButton({ active, icon: Icon, label, onClick }) { return <button className={active ? 'active' : ''} onClick={onClick}><Icon size={18} />{label}</button> }
 function Title({ k, h, p }) { return <div className="title"><div><label>{k}</label><h1>{h}</h1><p>{p}</p></div></div> }
 function Disclaimer() { return <div className="disclaimer"><ShieldCheck size={16} /><span><b>HealthScope informs. It does not diagnose.</b> General wellness and health-education information only.</span></div> }
