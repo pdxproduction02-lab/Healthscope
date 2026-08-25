@@ -45,6 +45,24 @@ function useLocal(key, initial) {
 
 function Logo() { return <div className="logo"><ScanLine size={18} /></div> }
 function Brand() { return <div className="brand"><Logo /><div><b>HealthScope</b><small>Understand. Track. Stay Informed.</small></div></div> }
+function Reminders() {
+  return (
+    <>
+      <Title
+        k="REMINDERS"
+        h="Stay on schedule."
+        p="Create reminders for water, medicines, and other important routines."
+      />
+
+      <div className="card pad">
+        <h2>Reminders coming next 🔔</h2>
+        <p>
+          Your reminder system will appear here.
+        </p>
+      </div>
+    </>
+  );
+}
 
 function App() {
   const [page, setPage] = useState('home')
