@@ -71,6 +71,7 @@ function App() {
   const [chatOpen, setChatOpen] = useState(false)
   const [toast, setToast] = useState('')
   const [labelData, setLabelData] = useState(null)
+  const [reminders, setReminders] = useLocal('hs_reminders', [])
 
   useEffect(() => { document.documentElement.dataset.theme = dark ? 'dark' : 'light' }, [dark])
   useEffect(() => {
