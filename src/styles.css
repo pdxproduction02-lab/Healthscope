@@ -262,3 +262,21 @@
     grid-column: span 2;
   }
 }
+.comparison-summary {
+  margin-top: 4px;
+  padding-top: 4px;
+}
+
+.comparison-summary p {
+  margin: 7px 0;
+  line-height: 1.5;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.comparison-summary small {
+  display: block;
+  margin-top: 12px;
+  opacity: 0.62;
+  line-height: 1.45;
+}
