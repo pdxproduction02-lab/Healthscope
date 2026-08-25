@@ -280,3 +280,74 @@
   opacity: 0.62;
   line-height: 1.45;
 }
+.ai-overview {
+  margin-top: 30px;
+  padding: 22px;
+}
+
+.ai-overview-head {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.ai-overview-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(35, 183, 163, 0.12);
+  color: #23b7a3;
+  flex-shrink: 0;
+}
+
+.ai-overview-head h2 {
+  margin: 3px 0 0;
+  font-size: 1.2rem;
+}
+
+.ai-overview-intro {
+  margin: 15px 0 18px;
+  line-height: 1.55;
+  opacity: 0.75;
+}
+
+.ai-overview-empty {
+  padding: 14px 0;
+  opacity: 0.7;
+}
+
+.ai-overview-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 0;
+  opacity: 0.8;
+}
+
+.ai-overview-error {
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(220, 70, 70, 0.08);
+}
+
+.ai-overview-result {
+  margin: 10px 0 16px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.ai-overview-result p {
+  margin: 0 0 14px;
+  line-height: 1.6;
+}
+
+.ai-overview-note {
+  display: block;
+  margin-top: 18px;
+  line-height: 1.45;
+  opacity: 0.6;
+}
