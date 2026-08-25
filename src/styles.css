@@ -53,3 +53,27 @@
   margin: 0;
   line-height: 1.55;
 }
+.chart-empty {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 24px;
+}
+
+.chart-empty b {
+  font-size: 1rem;
+}
+
+.chart-empty span {
+  max-width: 280px;
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+.chart-empty .secondary {
+  margin-top: 6px;
+}
