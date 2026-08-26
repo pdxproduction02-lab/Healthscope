@@ -102,22 +102,34 @@ function Reminders({
   };
 
   const testNotification = () => {
-    if (typeof Notification === 'undefined') {
-      notify('Notifications are not supported in this browser');
-      return;
-    }
+  notify('Testing notification...');
 
-    if (Notification.permission !== 'granted') {
-      notify('Please enable notifications first');
-      return;
-    }
+  if (typeof Notification === 'undefined') {
+    notify('Notifications are not supported in this browser');
+    return;
+  }
 
-    new Notification('HealthScope 🔔', {
-      body: 'Test successful! Your HealthScope notifications are working.'
+  if (Notification.permission !== 'granted') {
+    notify(`Notification permission: ${Notification.permission}`);
+    return;
+  }
+
+  try {
+    const notification = new Notification('HealthScope 🔔', {
+      body: 'Test successful! Your HealthScope notifications are working.',
+      icon: '/favicon.ico'
     });
 
-    notify('Test notification sent');
-  };
+    notification.onclick = () => {
+      window.focus();
+    };
+
+    notify('Test notification sent successfully');
+  } catch (error) {
+    console.error('Notification error:', error);
+    notify('Notification could not be displayed');
+  }
+};
   return (
     <>
       <Title
