@@ -7,6 +7,322 @@ import {
 } from 'lucide-react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import './styles.css'
+const LEARN_TOPICS = [
+  {
+    id: 'heart',
+    title: 'How does your heart work?',
+    category: 'Body Systems',
+    icon: '❤️',
+    summary:
+      'Your heart is a muscular pump that works with blood vessels to circulate blood throughout your body.',
+    intro:
+      'Your heart is part of the circulatory system. Its chambers, valves and coordinated contractions help keep blood moving in the correct direction.',
+    sections: [
+      {
+        heading: 'The pumping cycle',
+        text:
+          'The heart repeatedly relaxes and contracts. These movements help fill its chambers with blood and then push blood onward through the circulation.'
+      },
+      {
+        heading: 'Why rhythm matters',
+        text:
+          'Specialized electrical signals help coordinate the timing of heart muscle contractions so the pumping cycle can work efficiently.'
+      }
+    ],
+    process: [
+      'Blood returns to the heart',
+      'The heart pumps blood toward the lungs or body',
+      'Blood travels through blood vessels',
+      'Blood eventually returns to the heart'
+    ],
+    fact:
+      'The heart and blood vessels form a continuous circulatory system that transports oxygen and many other substances.',
+    myth: 'The heart is just one simple hollow muscle.',
+    truth:
+      'The heart has multiple chambers and valves that work together to direct blood flow.',
+    aiQuestions: [
+      'How does the heart know when to beat?',
+      'Why does my heart beat faster during exercise?',
+      'What do heart valves do?'
+    ]
+  },
+
+  {
+    id: 'lungs',
+    title: 'How do your lungs exchange oxygen?',
+    category: 'Body Systems',
+    icon: '🫁',
+    summary:
+      'Your lungs bring air into the body and exchange oxygen and carbon dioxide with the bloodstream.',
+    intro:
+      'When you breathe, air travels through branching airways toward tiny air sacs called alveoli, where gas exchange takes place.',
+    sections: [
+      {
+        heading: 'Air travels inward',
+        text:
+          'Air moves through the nose or mouth, down the airways and into increasingly smaller branches inside the lungs.'
+      },
+      {
+        heading: 'Gas exchange',
+        text:
+          'In the alveoli, oxygen can move into nearby blood while carbon dioxide can move from the blood into the air to be exhaled.'
+      }
+    ],
+    process: [
+      'You breathe in',
+      'Air travels through the airways',
+      'Air reaches tiny alveoli',
+      'Oxygen enters the bloodstream',
+      'Carbon dioxide is breathed out'
+    ],
+    fact:
+      'Breathing and circulation work together: the lungs exchange gases while blood transports them around the body.',
+    myth: 'Breathing faster always means you are getting more oxygen.',
+    truth:
+      'Gas exchange depends on several factors, not simply how quickly a person breathes.',
+    aiQuestions: [
+      'Why do I breathe faster during exercise?',
+      'What are alveoli?',
+      'Why do we breathe out carbon dioxide?'
+    ]
+  },
+
+  {
+    id: 'brain',
+    title: 'How does your brain communicate?',
+    category: 'Brain & Mental Wellness',
+    icon: '🧠',
+    summary:
+      'The brain uses vast networks of nerve cells to process information and coordinate many body functions.',
+    intro:
+      'Brain cells communicate using electrical and chemical signals. Different networks contribute to movement, sensation, memory, emotions and many other functions.',
+    sections: [
+      {
+        heading: 'Neural communication',
+        text:
+          'Neurons can send electrical signals along their length and communicate with other cells at specialized connections called synapses.'
+      },
+      {
+        heading: 'Networks work together',
+        text:
+          'The brain does not operate as a single processor. Many connected networks can be active and coordinate with each other.'
+      }
+    ],
+    process: [
+      'Information is detected',
+      'Signals travel through nerve cells',
+      'Networks process information',
+      'The body or brain responds'
+    ],
+    fact:
+      'Different brain regions can become more active during different tasks, while many systems work together.',
+    myth: 'Humans only use 10% of their brain.',
+    truth:
+      'The popular 10% claim is a myth. Different parts of the brain have different roles and activity patterns.',
+    aiQuestions: [
+      'How are memories formed?',
+      'What is a neuron?',
+      'How do nerves send signals?'
+    ]
+  },
+
+  {
+    id: 'kidneys',
+    title: 'How do kidneys filter blood?',
+    category: 'Body Systems',
+    icon: '🫘',
+    summary:
+      'The kidneys help filter blood, remove certain waste products and regulate water and important dissolved substances.',
+    intro:
+      'Kidneys contain tiny filtering units called nephrons. They filter blood and selectively reabsorb substances that the body still needs.',
+    sections: [
+      {
+        heading: 'Filtering and sorting',
+        text:
+          'The kidneys filter components from the blood and then selectively return many useful substances and water back to the bloodstream.'
+      },
+      {
+        heading: 'More than waste removal',
+        text:
+          'Kidneys contribute to fluid and electrolyte balance and participate in several other important body-regulation processes.'
+      }
+    ],
+    process: [
+      'Blood enters the kidneys',
+      'Filtering begins in nephrons',
+      'Useful substances are selectively reabsorbed',
+      'Some waste leaves the body in urine'
+    ],
+    fact:
+      'Kidneys do more than remove waste: they help regulate the body’s internal fluid environment.',
+    myth: 'Kidneys work like a simple coffee filter.',
+    truth:
+      'Kidneys actively filter and selectively reabsorb many substances rather than simply removing everything that passes through.',
+    aiQuestions: [
+      'What is a nephron?',
+      'How do kidneys control water balance?',
+      'Why does the body produce urine?'
+    ]
+  },
+
+  {
+    id: 'vaccines',
+    title: 'How do vaccines work?',
+    category: 'Immunity & Health Science',
+    icon: '💉',
+    summary:
+      'Vaccines help the immune system learn to recognize specific threats and prepare for future encounters.',
+    intro:
+      'Different vaccines use different scientific approaches, but their general goal is to safely expose the immune system to information that helps it recognize a particular infectious threat.',
+    sections: [
+      {
+        heading: 'Immune recognition',
+        text:
+          'The immune system can recognize features associated with infectious agents. Vaccination helps train immune responses against selected targets.'
+      },
+      {
+        heading: 'Immune memory',
+        text:
+          'After an immune response, memory cells may help the body respond more quickly or effectively to future encounters with the same or a similar target.'
+      }
+    ],
+    process: [
+      'Vaccine introduces immune-relevant information',
+      'The immune system recognizes the target',
+      'An immune response develops',
+      'Immune memory can form',
+      'Future responses may be faster'
+    ],
+    fact:
+      'Different vaccines can work through different mechanisms, which is why schedules and doses can vary.',
+    myth: 'Vaccines simply give you the disease so you become immune.',
+    truth:
+      'Vaccines are designed to train immune responses using carefully developed approaches and do not require a person to experience the disease itself in order to build protection.',
+    aiQuestions: [
+      'Why do some vaccines need multiple doses?',
+      'What is immune memory?',
+      'How does the immune system recognize germs?'
+    ]
+  },
+
+  {
+    id: 'digestion',
+    title: 'What happens to food after you swallow?',
+    category: 'Body Systems',
+    icon: '🍎',
+    summary:
+      'Digestion breaks food into smaller components that can be absorbed and used by the body.',
+    intro:
+      'The digestive system uses movement, enzymes and other processes to break food down and help the body absorb nutrients.',
+    sections: [
+      {
+        heading: 'Breaking food down',
+        text:
+          'Digestion begins in the mouth and continues through the digestive tract as food is mechanically and chemically processed.'
+      },
+      {
+        heading: 'Absorbing nutrients',
+        text:
+          'Much nutrient absorption occurs in the small intestine, where digested components can move into the body for use or storage.'
+      }
+    ],
+    process: [
+      'Food enters the mouth',
+      'Food travels through the digestive tract',
+      'Digestive processes break components down',
+      'Nutrients are absorbed',
+      'Remaining material continues onward'
+    ],
+    fact:
+      'Digestion involves both physical movement and chemical processes.',
+    myth: 'Digestion only happens in the stomach.',
+    truth:
+      'Digestion begins before food reaches the stomach and continues through multiple parts of the digestive system.',
+    aiQuestions: [
+      'Why does the stomach make acid?',
+      'Where are nutrients absorbed?',
+      'How long does digestion take?'
+    ]
+  },
+
+  {
+    id: 'immune-system',
+    title: 'How does the immune system defend the body?',
+    category: 'Immunity & Health Science',
+    icon: '🛡️',
+    summary:
+      'The immune system uses multiple layers of defense to recognize and respond to potentially harmful microbes and other threats.',
+    intro:
+      'Immune defenses include barriers, cells and signaling systems that work together. Responses can differ depending on the type of challenge.',
+    sections: [
+      {
+        heading: 'Multiple layers of defense',
+        text:
+          'Physical barriers and innate immune responses provide early protection, while adaptive immune responses can develop targeted recognition and memory.'
+      },
+      {
+        heading: 'Recognition and response',
+        text:
+          'Immune cells communicate using chemical signals and can coordinate different types of responses.'
+      }
+    ],
+    process: [
+      'A potential threat is detected',
+      'Immune cells and signals respond',
+      'The response adapts to the challenge',
+      'Some immune memory may remain'
+    ],
+    fact:
+      'The immune system is not one single organ; it involves many cells, tissues and signaling systems.',
+    myth: 'A stronger immune response is always better.',
+    truth:
+      'Immune responses need to be regulated. Both insufficient and excessive responses can cause problems.',
+    aiQuestions: [
+      'What is the difference between innate and adaptive immunity?',
+      'How do immune cells communicate?',
+      'What are antibodies?'
+    ]
+  },
+
+  {
+    id: 'sleep',
+    title: 'What happens in your body while you sleep?',
+    category: 'Brain & Mental Wellness',
+    icon: '😴',
+    summary:
+      'Sleep is an active biological state associated with changing brain activity and important body processes.',
+    intro:
+      'Sleep includes different stages and patterns of brain and body activity. Regular sleep supports many aspects of normal functioning and wellbeing.',
+    sections: [
+      {
+        heading: 'Sleep is active',
+        text:
+          'The brain and body continue many organized processes during sleep. Brain activity changes across different sleep stages.'
+      },
+      {
+        heading: 'Why sleep patterns matter',
+        text:
+          'Sleep timing, duration and quality can all influence how rested and alert a person feels.'
+      }
+    ],
+    process: [
+      'The body prepares for sleep',
+      'Sleep stages change over the night',
+      'Brain and body activity shifts',
+      'The sleep-wake cycle continues'
+    ],
+    fact:
+      'Sleep is not simply the brain switching off; patterns of brain activity continue to change throughout the night.',
+    myth: 'You can permanently replace regular sleep with occasional catch-up sleep.',
+    truth:
+      'Occasional extra sleep may help after short-term sleep loss, but regular sleep patterns remain important for overall wellbeing.',
+    aiQuestions: [
+      'Why do we dream?',
+      'What are sleep stages?',
+      'Why do I feel tired after poor sleep?'
+    ]
+  }
+]
 
 const seed = [
   { date: 'Mon', sleep: 7.2, water: 6, movement: 42, mood: 4, energy: 4 },
@@ -514,7 +830,13 @@ useEffect(() => {
         {page === 'home' && <HomePage nav={nav} entries={entries} ask={() => setChatOpen(true)} />}
         {page === 'track' && <Track entries={entries} save={saveEntry} />}
         {page === 'label' && <LabelScope data={labelData} setData={setLabelData} done={() => setToast('Label ready')} />}
-        {page === 'learn' && <Learn />}
+        {page === 'learn' && (
+  <Learn
+    askTopic={(question) => {
+      setChatOpen(true);
+    }}
+  />
+)}
         {page === 'reminders' && (
   <Reminders
     reminders={reminders}
@@ -1495,11 +1817,193 @@ if (nutritionDetected && ingredientCount > 0) {
   );
 }
 
-function Learn() {
-  const [query, setQuery] = useState('')
-  const articles = [['Nutrition', 'Reading a nutrition label without the jargon', Utensils], ['Nutrition', 'What dietary fiber means', Leaf], ['Sleep', 'Understanding sleep consistency', Moon], ['Wellness', 'Hydration basics', Droplets], ['Movement', 'Everyday activity, explained', Activity], ['Health Literacy', 'How to read health claims', Info]]
-  const filtered = articles.filter(([cat, title]) => `${cat} ${title}`.toLowerCase().includes(query.toLowerCase()))
-  return <><Title k="LEARN" h="Build practical health literacy." p="Clear explanations for everyday wellness and nutrition topics." /><div className="search"><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search topics…" aria-label="Search learning topics" /><BookOpen size={17} /></div><section className="articles">{filtered.map(([cat, title, Icon]) => <article className="card article" key={title}><div className="articleicon"><Icon size={19} /></div><label>{cat} · 4 min</label><h3>{title}</h3><p>Explore a concise, practical explanation designed to make everyday health information easier to understand.</p><button className="link">Read article <ChevronRight size={15} /></button></article>)}</section></>
+function Learn({ askTopic }) {
+  const [search, setSearch] = useState('');
+  const [activeCategory, setActiveCategory] = useState('All');
+
+  const categories = [
+    'All',
+    ...Array.from(new Set(LEARN_TOPICS.map((topic) => topic.category)))
+  ];
+
+  const normalizedSearch = search.trim().toLowerCase();
+
+  const filteredTopics = LEARN_TOPICS.filter((topic) => {
+    const matchesCategory =
+      activeCategory === 'All' ||
+      topic.category === activeCategory;
+
+    const searchableText = [
+      topic.title,
+      topic.category,
+      topic.summary,
+      topic.intro,
+      topic.fact,
+      topic.myth,
+      topic.truth,
+      ...topic.sections.map((section) => section.heading),
+      ...topic.sections.map((section) => section.text),
+      ...topic.aiQuestions
+    ]
+      .join(' ')
+      .toLowerCase();
+
+    const matchesSearch =
+      !normalizedSearch ||
+      searchableText.includes(normalizedSearch);
+
+    return matchesCategory && matchesSearch;
+  });
+
+  return (
+    <>
+      <Title
+        k="LEARN"
+        h="Explore how your body works."
+        p="Discover health science, understand common myths, and explore topics at your own pace."
+      />
+
+      <section className="learn-search card pad">
+        <div className="learn-search-heading">
+          <div>
+            <label>EXPLORE HEALTHSCOPE</label>
+            <h2>What would you like to understand?</h2>
+          </div>
+        </div>
+
+        <div className="learn-search-input">
+          <Info size={19} />
+          <input
+            type="search"
+            placeholder="Search heart, vaccines, sleep..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch('')}
+              aria-label="Clear search"
+            >
+              <X size={17} />
+            </button>
+          )}
+        </div>
+
+        <div className="learn-categories">
+          {categories.map((category) => (
+            <button
+              key={category}
+              type="button"
+              className={
+                activeCategory === category
+                  ? 'active'
+                  : ''
+              }
+              onClick={() => setActiveCategory(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="learn-results">
+        <div className="learn-results-head">
+          <div>
+            <label>TOPICS</label>
+            <h2>
+              {filteredTopics.length} topic
+              {filteredTopics.length !== 1 ? 's' : ''} found
+            </h2>
+          </div>
+
+          {activeCategory !== 'All' && (
+            <button
+              className="learn-clear-filter"
+              type="button"
+              onClick={() => setActiveCategory('All')}
+            >
+              Show all
+            </button>
+          )}
+        </div>
+
+        {filteredTopics.length === 0 ? (
+          <div className="card pad learn-empty">
+            <Info size={24} />
+            <h3>No topics found</h3>
+            <p>
+              Try searching for another body system, health topic, or science question.
+            </p>
+
+            <button
+              type="button"
+              className="primary"
+              onClick={() => {
+                setSearch('');
+                setActiveCategory('All');
+              }}
+            >
+              Clear search
+            </button>
+          </div>
+        ) : (
+          <div className="learn-topic-grid">
+            {filteredTopics.map((topic) => (
+              <article
+                className="card learn-topic-card"
+                key={topic.id}
+              >
+                <div className="learn-topic-icon">
+                  {topic.icon}
+                </div>
+
+                <div className="learn-topic-content">
+                  <label>{topic.category}</label>
+
+                  <h3>{topic.title}</h3>
+
+                  <p>{topic.summary}</p>
+
+                  <div className="learn-topic-actions">
+                    <button
+                      type="button"
+                      className="learn-explore"
+                      onClick={() =>
+                        askTopic?.(
+                          `I want to learn about: ${topic.title}`
+                        )
+                      }
+                    >
+                      Explore topic
+                      <ChevronRight size={16} />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="learn-ask"
+                      onClick={() =>
+                        askTopic?.(
+                          `I have a question about ${topic.title}. Please explain it clearly and educationally.`
+                        )
+                      }
+                    >
+                      <MessageCircle size={15} />
+                      Ask HealthScope
+                    </button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <Disclaimer />
+    </>
+  );
 }
 
 function Profile({ dark, setDark, clear }) { return <><Title k="PROFILE" h="Your data, under your control." p="No account is required for the demo. Keep everyday tracking local where practical." /><section className="profile"><div className="card pad"><div className="avatar"><UserRound size={25} /></div><h2>Guest profile</h2><p>Demo-ready, local-first experience.</p></div><div className="card pad settings"><div className="setting"><Moon size={17} /><span><b>Appearance</b><small>{dark ? 'Dark' : 'Light'} mode</small></span><button className="toggle" onClick={() => setDark(!dark)} aria-label="Toggle dark mode"><i className={dark ? 'on' : ''} /></button></div><div className="setting"><ShieldCheck size={17} /><span><b>Local-first storage</b><small>Wellness entries stay in this browser.</small></span></div><div className="privacy"><ShieldCheck size={17} /><span><b>Privacy principle</b><small>Only send information to AI services when needed. Disclose cloud processing in production.</small></span></div><button className="danger" onClick={clear}><Trash2 size={16} />Delete local demo data</button></div></section><Disclaimer /></> }
