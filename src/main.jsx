@@ -45,7 +45,13 @@ function useLocal(key, initial) {
 
 function Logo() { return <div className="logo"><ScanLine size={18} /></div> }
 function Brand() { return <div className="brand"><Logo /><div><b>HealthScope</b><small>Understand. Track. Stay Informed.</small></div></div> }
-function Reminders({ reminders, setReminders, notify }) {
+function Reminders({
+  reminders,
+  setReminders,
+  notify,
+  notificationPermission,
+  requestNotificationPermission
+}) {
   const [title, setTitle] = useState('');
   const [type, setType] = useState('water');
   const [time, setTime] = useState('09:00');
@@ -279,6 +285,11 @@ function App() {
   const [toast, setToast] = useState('')
   const [labelData, setLabelData] = useState(null)
   const [reminders, setReminders] = useLocal('hs_reminders', [])
+  const [notificationPermission, setNotificationPermission] = useState(
+  typeof Notification !== 'undefined'
+    ? Notification.permission
+    : 'unsupported'
+)
 
   useEffect(() => { document.documentElement.dataset.theme = dark ? 'dark' : 'light' }, [dark])
   useEffect(() => {
@@ -286,7 +297,27 @@ function App() {
     const id = setTimeout(() => setToast(''), 2200)
     return () => clearTimeout(id)
   }, [toast])
+  const requestNotificationPermission = async () => {
+  if (typeof Notification === 'undefined') {
+    setToast('Notifications are not supported in this browser')
+    return
+  }
 
+  try {
+    const permission = await Notification.requestPermission()
+    setNotificationPermission(permission)
+
+    if (permission === 'granted') {
+      setToast('Notifications enabled 🔔')
+    } else if (permission === 'denied') {
+      setToast('Notifications blocked in browser settings')
+    } else {
+      setToast('Notification permission not granted')
+    }
+  } catch {
+    setToast('Could not enable notifications')
+  }
+  }
   const nav = (next) => { setPage(next); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   
   const clearLocal = () => {
@@ -347,6 +378,8 @@ function App() {
     reminders={reminders}
     setReminders={setReminders}
     notify={setToast}
+    notificationPermission={notificationPermission}
+    requestNotificationPermission={requestNotificationPermission}
   />
 )}
         {page === 'profile' && <Profile dark={dark} setDark={setDark} clear={clearLocal} />}
