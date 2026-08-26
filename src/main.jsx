@@ -50,7 +50,7 @@ function Reminders({
   setReminders,
   notify,
   notificationPermission,
-  requestNotificationPermission
+  requestNotificationPermission,
   pushStatus
 }) {
   const [title, setTitle] = useState('');
