@@ -51,6 +51,7 @@ function Reminders({
   notify,
   notificationPermission,
   requestNotificationPermission
+  pushStatus
 }) {
   const [title, setTitle] = useState('');
   const [type, setType] = useState('water');
@@ -184,7 +185,34 @@ function Reminders({
       <Bell size={17} />
       Send test notification
     </button>
-  )}
+    )}
+
+  <div className="push-status">
+    <div className={`push-dot ${pushStatus}`}></div>
+
+    <div>
+      <b>
+        {pushStatus === 'subscribed'
+          ? 'Background notifications connected'
+          : pushStatus === 'ready'
+            ? 'Background notifications available'
+            : pushStatus === 'unsupported'
+              ? 'Background notifications unavailable'
+              : pushStatus === 'error'
+                ? 'Background notification setup needs attention'
+                : 'Checking notification capability...'}
+      </b>
+
+      <small>
+        {pushStatus === 'subscribed'
+          ? 'This device is connected for HealthScope push notifications.'
+          : pushStatus === 'ready'
+            ? 'This device supports background notification setup.'
+            : 'HealthScope is checking your browser capabilities.'}
+      </small>
+    </div>
+  </div>
+
 </div>
 </section>
 
@@ -370,6 +398,7 @@ function App() {
     ? Notification.permission
     : 'unsupported'
 )
+  const [pushStatus, setPushStatus] = useState('checking')
 useEffect(() => {
   if (!('serviceWorker' in navigator)) return;
 
@@ -377,6 +406,33 @@ useEffect(() => {
     console.error('Service Worker registration failed:', error);
   });
 }, []);
+  useEffect(() => {
+  const checkPushSupport = async () => {
+    const supported =
+      'serviceWorker' in navigator &&
+      'PushManager' in window &&
+      typeof Notification !== 'undefined'
+
+    if (!supported) {
+      setPushStatus('unsupported')
+      return
+    }
+
+    try {
+      const registration = await navigator.serviceWorker.ready
+
+      const subscription =
+        await registration.pushManager.getSubscription()
+
+      setPushStatus(subscription ? 'subscribed' : 'ready')
+    } catch (error) {
+      console.error('Push capability check failed:', error)
+      setPushStatus('error')
+    }
+  }
+
+  checkPushSupport()
+}, [])
   useEffect(() => { document.documentElement.dataset.theme = dark ? 'dark' : 'light' }, [dark])
   useEffect(() => {
     if (!toast) return undefined
@@ -466,6 +522,7 @@ useEffect(() => {
     notify={setToast}
     notificationPermission={notificationPermission}
     requestNotificationPermission={requestNotificationPermission}
+    pushStatus={pushStatus}
   />
 )}
         {page === 'profile' && <Profile dark={dark} setDark={setDark} clear={clearLocal} />}
