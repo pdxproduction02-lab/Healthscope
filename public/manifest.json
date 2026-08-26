@@ -1,1 +1,10 @@
-
+{
+  "name": "HealthScope",
+  "short_name": "HealthScope",
+  "description": "Understand. Track. Stay Informed.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f8f8",
+  "theme_color": "#23b7a3",
+  "orientation": "portrait-primary"
+}
