@@ -1,18 +1,6 @@
-const CACHE_NAME = 'healthscope-v2';
+const CACHE_NAME = 'healthscope-v3';
 
-const APP_SHELL = [
-  '/',
-  '/index.html',
-  '/manifest.json'
-];
-
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(APP_SHELL);
-    })
-  );
-
+self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
@@ -21,7 +9,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key !== CACHE_NAME)
+          .filter((key) => key.startsWith('healthscope-') && key !== CACHE_NAME)
           .map((key) => caches.delete(key))
       )
     )
@@ -30,13 +18,9 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-self.addEventListener('fetch', (event) => {
-  // Only handle GET requests
-  if (event.request.method !== 'GET') return;
-
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
-    })
-  );
+// IMPORTANT:
+// Don't cache Vite/Vercel HTML or JS automatically.
+// This prevents old deployments from causing a blank page.
+self.addEventListener('fetch', () => {
+  // Let the browser handle requests normally.
 });
