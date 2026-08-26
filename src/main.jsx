@@ -371,16 +371,11 @@ function App() {
     : 'unsupported'
 )
 useEffect(() => {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker
-      .register('/sw.js')
-      .then((registration) => {
-        console.log('HealthScope Service Worker registered:', registration.scope);
-      })
-      .catch((error) => {
-        console.error('Service Worker registration failed:', error);
-      });
-  }
+  if (!('serviceWorker' in navigator)) return;
+
+  navigator.serviceWorker.register('/sw.js').catch((error) => {
+    console.error('Service Worker registration failed:', error);
+  });
 }, []);
   useEffect(() => { document.documentElement.dataset.theme = dark ? 'dark' : 'light' }, [dark])
   useEffect(() => {
