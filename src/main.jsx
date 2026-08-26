@@ -89,7 +89,7 @@ function Reminders({
     notify('Reminder deleted');
   };
 
-  const toggleReminder = (id) => {
+    const toggleReminder = (id) => {
     setReminders(
       reminders.map((reminder) =>
         reminder.id === id
@@ -97,23 +97,27 @@ function Reminders({
           : reminder
       )
     );
-   const testNotification = () => {
-  if (typeof Notification === 'undefined') {
-    notify('Notifications are not supported in this browser');
-    return;
-  }
 
-  if (Notification.permission !== 'granted') {
-    notify('Please enable notifications first');
-    return;
-  }
+    notify('Reminder updated');
+  };
 
-  new Notification('HealthScope 🔔', {
-    body: 'Test successful! Your HealthScope notifications are working.'
-  });
+  const testNotification = () => {
+    if (typeof Notification === 'undefined') {
+      notify('Notifications are not supported in this browser');
+      return;
+    }
 
-  notify('Test notification sent');
-};
+    if (Notification.permission !== 'granted') {
+      notify('Please enable notifications first');
+      return;
+    }
+
+    new Notification('HealthScope 🔔', {
+      body: 'Test successful! Your HealthScope notifications are working.'
+    });
+
+    notify('Test notification sent');
+  };
     notify('Reminder updated');
   };
   return (
