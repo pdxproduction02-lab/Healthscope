@@ -118,8 +118,6 @@ function Reminders({
 
     notify('Test notification sent');
   };
-    notify('Reminder updated');
-  };
   return (
     <>
       <Title
