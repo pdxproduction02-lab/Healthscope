@@ -744,3 +744,49 @@
     width: 100%;
   }
 }
+/* =========================
+   NOTIFICATION TEST BUTTON
+========================= */
+
+.notification-actions {
+  flex-shrink: 0;
+}
+
+.notification-test {
+  min-height: 46px;
+  padding: 0 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border-radius: 12px;
+  border: 1px solid rgba(35, 183, 163, 0.35);
+
+  background: rgba(35, 183, 163, 0.08);
+  color: var(--accent);
+
+  font: inherit;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.notification-test:hover {
+  transform: translateY(-1px);
+  background: rgba(35, 183, 163, 0.14);
+  border-color: rgba(35, 183, 163, 0.6);
+}
+
+@media (max-width: 700px) {
+  .notification-actions,
+  .notification-test {
+    width: 100%;
+  }
+                         }
