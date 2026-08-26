@@ -97,7 +97,23 @@ function Reminders({
           : reminder
       )
     );
+   const testNotification = () => {
+  if (typeof Notification === 'undefined') {
+    notify('Notifications are not supported in this browser');
+    return;
+  }
 
+  if (Notification.permission !== 'granted') {
+    notify('Please enable notifications first');
+    return;
+  }
+
+  new Notification('HealthScope 🔔', {
+    body: 'Test successful! Your HealthScope notifications are working.'
+  });
+
+  notify('Test notification sent');
+};
     notify('Reminder updated');
   };
   return (
@@ -133,7 +149,8 @@ function Reminders({
     </div>
   </div>
 
-  {notificationPermission !== 'granted' && (
+  <div className="notification-actions">
+  {notificationPermission !== 'granted' ? (
     <button
       className="primary notification-enable"
       type="button"
@@ -142,7 +159,17 @@ function Reminders({
       <Bell size={17} />
       Enable notifications
     </button>
+  ) : (
+    <button
+      className="notification-test"
+      type="button"
+      onClick={testNotification}
+    >
+      <Bell size={17} />
+      Send test notification
+    </button>
   )}
+</div>
 </section>
 
       <section className="card pad reminder-form-card">
