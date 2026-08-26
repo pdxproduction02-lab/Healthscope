@@ -790,3 +790,54 @@
     width: 100%;
   }
                          }
+/* =========================
+   PUSH NOTIFICATION STATUS
+========================= */
+
+.push-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 16px;
+  padding: 14px 16px;
+
+  border: 1px solid var(--line);
+  border-radius: 14px;
+
+  background: rgba(35, 183, 163, 0.05);
+}
+
+.push-status > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.push-status b {
+  font-size: 13px;
+}
+
+.push-status small {
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.push-dot {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+
+  border-radius: 50%;
+  background: #9ca3af;
+}
+
+.push-dot.ready,
+.push-dot.subscribed {
+  background: var(--accent);
+}
+
+.push-dot.error,
+.push-dot.unsupported {
+  background: #e07a5f;
+}
