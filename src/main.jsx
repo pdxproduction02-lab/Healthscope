@@ -236,9 +236,6 @@ function Reminders({ reminders, setReminders, notify }) {
     </>
   );
 }
-    </>
-  );
-}
 
 function App() {
   const [page, setPage] = useState('home')
