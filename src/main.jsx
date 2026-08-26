@@ -101,28 +101,30 @@ function Reminders({
     notify('Reminder updated');
   };
 
-  const testNotification = () => {
-  notify('Testing notification...');
-
+  const testNotification = async () => {
   if (typeof Notification === 'undefined') {
     notify('Notifications are not supported in this browser');
     return;
   }
 
   if (Notification.permission !== 'granted') {
-    notify(`Notification permission: ${Notification.permission}`);
+    notify('Please enable notifications first');
+    return;
+  }
+
+  if (!('serviceWorker' in navigator)) {
+    notify('Service workers are not supported in this browser');
     return;
   }
 
   try {
-    const notification = new Notification('HealthScope 🔔', {
-      body: 'Test successful! Your HealthScope notifications are working.',
-      icon: '/favicon.ico'
-    });
+    const registration = await navigator.serviceWorker.ready;
 
-    notification.onclick = () => {
-      window.focus();
-    };
+    await registration.showNotification('HealthScope 🔔', {
+      body: 'Test successful! Your HealthScope notifications are working.',
+      tag: 'healthscope-test',
+      renotify: true
+    });
 
     notify('Test notification sent successfully');
   } catch (error) {
@@ -1589,3 +1591,15 @@ function Chat({ close }) {
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}))
 
 createRoot(document.getElementById('root')).render(<App />)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then(() => {
+        console.log('HealthScope service worker registered');
+      })
+      .catch((error) => {
+        console.error('Service worker registration failed:', error);
+      });
+  });
+}
