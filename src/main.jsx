@@ -106,7 +106,44 @@ function Reminders({
         k="REMINDERS"
         h="Stay on schedule."
         p="Create reminders for water, medicines, and important routines."
-      />
+      /><section className="card pad notification-panel">
+  <div className="notification-panel-info">
+    <div className="notification-icon">
+      <Bell size={21} />
+    </div>
+
+    <div>
+      <label>NOTIFICATIONS</label>
+
+      <h3>
+        {notificationPermission === 'granted'
+          ? 'Notifications are enabled'
+          : notificationPermission === 'denied'
+            ? 'Notifications are blocked'
+            : 'Stay on track with reminders'}
+      </h3>
+
+      <p>
+        {notificationPermission === 'granted'
+          ? 'HealthScope can show reminder notifications when the app is active.'
+          : notificationPermission === 'denied'
+            ? 'Enable notifications from your browser or device settings to receive reminders.'
+            : 'Allow notifications so HealthScope can alert you when a reminder is due.'}
+      </p>
+    </div>
+  </div>
+
+  {notificationPermission !== 'granted' && (
+    <button
+      className="primary notification-enable"
+      type="button"
+      onClick={requestNotificationPermission}
+    >
+      <Bell size={17} />
+      Enable notifications
+    </button>
+  )}
+</section>
 
       <section className="card pad reminder-form-card">
         <div className="reminder-form-heading">
