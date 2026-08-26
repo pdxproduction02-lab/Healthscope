@@ -1820,7 +1820,7 @@ if (nutritionDetected && ingredientCount > 0) {
 function Learn({ askTopic }) {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
-
+  const [selectedTopic, setSelectedTopic] = useState(null);
   const categories = [
     'All',
     ...Array.from(new Set(LEARN_TOPICS.map((topic) => topic.category)))
@@ -1854,7 +1854,122 @@ function Learn({ askTopic }) {
 
     return matchesCategory && matchesSearch;
   });
+if (selectedTopic) {
+  return (
+    <>
+      <section className="learn-article">
 
+        <button
+          type="button"
+          className="learn-back"
+          onClick={() => setSelectedTopic(null)}
+        >
+          ← Back to Learn
+        </button>
+
+        <article className="card learn-article-card">
+
+          <div className="learn-article-hero">
+
+            <div className="learn-article-icon">
+              {selectedTopic.icon}
+            </div>
+
+            <div>
+              <label>{selectedTopic.category}</label>
+              <h1>{selectedTopic.title}</h1>
+            </div>
+
+          </div>
+
+          <p className="learn-article-intro">
+            {selectedTopic.intro || selectedTopic.summary}
+          </p>
+
+          <div className="learn-article-divider" />
+
+          <section className="learn-article-content">
+
+            {selectedTopic.sections?.map((section, index) => (
+              <div
+                className="learn-article-section"
+                key={index}
+              >
+                <h2>{section.heading}</h2>
+                <p>{section.text}</p>
+              </div>
+            ))}
+
+          </section>
+
+          {selectedTopic.fact && (
+            <section className="learn-fact-box">
+
+              <div className="learn-fact-icon">
+                💡
+              </div>
+
+              <div>
+                <label>QUICK FACT</label>
+                <p>{selectedTopic.fact}</p>
+              </div>
+
+            </section>
+          )}
+
+          {(selectedTopic.myth || selectedTopic.truth) && (
+            <section className="learn-myth-box">
+
+              <div className="learn-myth-header">
+                <span>MYTH VS REALITY</span>
+              </div>
+
+              {selectedTopic.myth && (
+                <div className="learn-myth">
+                  <b>Common myth</b>
+                  <p>{selectedTopic.myth}</p>
+                </div>
+              )}
+
+              {selectedTopic.truth && (
+                <div className="learn-truth">
+                  <b>What science says</b>
+                  <p>{selectedTopic.truth}</p>
+                </div>
+              )}
+
+            </section>
+          )}
+
+          <section className="learn-article-ai">
+
+            <div>
+              <label>STILL CURIOUS?</label>
+              <h2>Ask HealthScope about this topic</h2>
+
+              <p>
+                Ask follow-up questions and explore the topic in more detail.
+              </p>
+            </div>
+
+            <button
+  type="button"
+  className="learn-explore"
+  onClick={() => setSelectedTopic(topic)}
+>
+  Explore topic
+  <ChevronRight size={16} />
+</button>
+
+          </section>
+
+        </article>
+      </section>
+
+      <Disclaimer />
+    </>
+  );
+}
   return (
     <>
       <Title
