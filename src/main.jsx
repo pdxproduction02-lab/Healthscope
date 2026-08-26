@@ -78,7 +78,22 @@ function Reminders({ reminders, setReminders, notify }) {
 
     notify('Reminder saved');
   };
+  const deleteReminder = (id) => {
+    setReminders(reminders.filter((reminder) => reminder.id !== id));
+    notify('Reminder deleted');
+  };
 
+  const toggleReminder = (id) => {
+    setReminders(
+      reminders.map((reminder) =>
+        reminder.id === id
+          ? { ...reminder, completed: !reminder.completed }
+          : reminder
+      )
+    );
+
+    notify('Reminder updated');
+  };
   return (
     <>
       <Title
@@ -227,6 +242,25 @@ function Reminders({ reminders, setReminders, notify }) {
                         : 'Weekly'}
                   </small>
                 </div>
+                <div className="reminder-actions">
+  <button
+    type="button"
+    className={`reminder-toggle ${reminder.completed ? 'paused' : ''}`}
+    onClick={() => toggleReminder(reminder.id)}
+    title={reminder.completed ? 'Resume reminder' : 'Pause reminder'}
+  >
+    {reminder.completed ? '▶' : 'Ⅱ'}
+  </button>
+
+  <button
+    type="button"
+    className="reminder-delete"
+    onClick={() => deleteReminder(reminder.id)}
+    title="Delete reminder"
+  >
+    <Trash2 size={17} />
+  </button>
+</div>
               </div>
             ))}
           </div>
