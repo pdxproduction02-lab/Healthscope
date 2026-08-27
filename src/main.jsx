@@ -2039,6 +2039,9 @@ function BMICalculator({ askTopic }) {
   const [weight, setWeight] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [aiSynopsis, setAiSynopsis] = useState('');
+const [aiLoading, setAiLoading] = useState(false);
+const [aiError, setAiError] = useState('');
 
   const calculateBMI = (e) => {
     e.preventDefault();
@@ -2070,6 +2073,76 @@ function BMICalculator({ askTopic }) {
     setResult(null);
     setError('');
   };
+  const getAISynopsis = async () => {
+  if (!result) return;
+
+  setAiLoading(true);
+  setAiError('');
+  setAiSynopsis('');
+
+  try {
+    const response = await fetch('/api/ask-healthscope', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: `
+A HealthScope user calculated a BMI value of ${result} using:
+Height: ${height} cm
+Weight: ${weight} kg
+
+Give a concise, educational explanation of BMI.
+
+Important rules:
+- Do NOT diagnose the user.
+- Do NOT classify their body or weight.
+- Do NOT say whether their BMI is healthy, unhealthy, normal, underweight, overweight, or obese.
+- Do NOT give weight-loss, weight-gain, dieting, or body-change advice.
+- Explain what BMI mathematically represents.
+- Explain important limitations of BMI.
+- Mention that BMI does not directly measure body composition or overall health.
+- Since the user may be a teenager, clearly explain that BMI interpretation for young people depends on age and growth context.
+- Keep the response supportive, neutral, educational, and easy to understand.
+
+Structure the answer with these headings:
+What this calculation is
+What BMI can and cannot tell us
+Important context
+Key takeaway
+        `.trim()
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('AI request failed');
+    }
+
+    const data = await response.json();
+
+    const answer =
+      data.answer ||
+      data.reply ||
+      data.message ||
+      data.text;
+
+    if (!answer) {
+      throw new Error('No AI response received');
+    }
+
+    setAiSynopsis(answer);
+
+  } catch (err) {
+    console.error('BMI AI synopsis error:', err);
+
+    setAiError(
+      'HealthScope AI could not generate the synopsis right now. Please try again.'
+    );
+
+  } finally {
+    setAiLoading(false);
+  }
+};
 
   return (
     <section className="bmi-calculator">
@@ -2166,6 +2239,51 @@ function BMICalculator({ askTopic }) {
           <div className="bmi-important-note">
             <b>Important:</b> BMI is a screening measure and does not directly measure overall health or body composition. For teenagers, interpreting BMI requires age- and growth-related context, so HealthScope does not provide a personal weight-status classification.
           </div>
+          <button
+  type="button"
+  className="bmi-ai-button"
+  onClick={getAISynopsis}
+  disabled={aiLoading}
+>
+  {aiLoading ? (
+    <>
+      <span className="bmi-ai-spinner" />
+      HealthScope AI is thinking...
+    </>
+  ) : (
+    <>
+      ✨ Get AI educational synopsis
+    </>
+  )}
+</button>
+          {aiError && (
+  <div className="bmi-ai-error">
+    {aiError}
+  </div>
+)}
+
+{aiSynopsis && (
+  <div className="bmi-ai-result">
+
+    <div className="bmi-ai-result-header">
+      <span>✨</span>
+
+      <div>
+        <label>HEALTHSCOPE AI</label>
+        <h3>Your educational BMI synopsis</h3>
+      </div>
+    </div>
+
+    <div className="bmi-ai-text">
+      {aiSynopsis}
+    </div>
+
+    <small>
+      AI-generated educational information · Not a medical diagnosis or personal health assessment.
+    </small>
+
+  </div>
+)}
 
           <button
             type="button"
