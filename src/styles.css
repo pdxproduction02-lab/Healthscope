@@ -3187,3 +3187,132 @@
     font-size: 8px;
   }
   }
+/* =========================================================
+   LABELSCOPE — LABEL INSIGHT SCORE
+   ========================================================= */
+
+.label-insight-score {
+  position: relative;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px 20px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.label-score-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+.label-score-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 193, 7, 0.12);
+  font-size: 19px;
+}
+
+.label-score-left label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin-bottom: 5px;
+}
+
+.label-score-left h3 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+.label-score-left p {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+  opacity: 0.7;
+  max-width: 430px;
+}
+
+.label-score-number {
+  display: flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.label-score-number strong {
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.label-score-number span {
+  margin-left: 3px;
+  font-size: 13px;
+  opacity: 0.55;
+  font-weight: 700;
+}
+
+.label-score-category {
+  grid-column: 1 / -1;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(127, 127, 127, 0.08);
+}
+
+.label-score-disclaimer {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 11px;
+  line-height: 1.5;
+  opacity: 0.58;
+}
+
+.label-score-disclaimer svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 640px) {
+  .label-insight-score {
+    padding: 18px;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+  }
+
+  .label-score-left {
+    gap: 10px;
+  }
+
+  .label-score-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  .label-score-left h3 {
+    font-size: 15px;
+  }
+
+  .label-score-left p {
+    font-size: 11px;
+  }
+
+  .label-score-number strong {
+    font-size: 29px;
+  }
+  }
