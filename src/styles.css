@@ -1688,3 +1688,29 @@
   color: inherit !important;
   stroke: currentColor !important;
 }
+/* LEARN EXPLORE BUTTON — DARK/LIGHT THEME */
+
+[data-theme="dark"] .learn-topic-card .learn-explore {
+  background: #102b2a !important;
+  border-color: #247d74 !important;
+  color: #dffffa !important;
+}
+
+[data-theme="dark"] .learn-topic-card .learn-explore svg {
+  color: #dffffa !important;
+}
+
+[data-theme="dark"] .learn-topic-card .learn-explore:hover {
+  background: #17423f !important;
+  border-color: var(--accent) !important;
+}
+
+[data-theme="light"] .learn-topic-card .learn-explore {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .learn-topic-card .learn-explore svg {
+  color: #ffffff !important;
+}
