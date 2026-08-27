@@ -5,7 +5,7 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  margin: 14px 0 16px;
+  margin: 14px 0 16px; 
   padding: 14px;
   border-radius: 12px;
   background: rgba(99, 102, 241, 0.08);
@@ -2415,4 +2415,309 @@
   min-width: 155px;
 }
 
-.b
+.bmi-reset {
+  min-height: 48px;
+
+  padding: 0 20px;
+
+  border: 1px solid var(--line) !important;
+  border-radius: 12px;
+
+  background: transparent !important;
+
+  color: var(--muted) !important;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.bmi-reset:hover {
+  color: var(--text) !important;
+
+  border-color:
+    rgba(35, 183, 163, 0.45) !important;
+
+  background:
+    rgba(35, 183, 163, 0.06) !important;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.bmi-error {
+  position: relative;
+
+  margin-top: 16px;
+  padding: 13px 15px;
+
+  border-radius: 12px;
+
+  background: rgba(220, 80, 80, 0.08);
+
+  border:
+    1px solid rgba(220, 80, 80, 0.22);
+
+  color: var(--text);
+
+  font-size: 13px;
+}
+
+/* =========================
+   RESULT
+========================= */
+
+.bmi-result {
+  position: relative;
+
+  margin-top: 22px;
+  padding: 26px;
+
+  text-align: center;
+
+  border:
+    1px solid rgba(35, 183, 163, 0.22);
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(35, 183, 163, 0.10),
+      rgba(35, 183, 163, 0.025)
+    );
+
+  animation: bmiResultIn 0.4s ease;
+}
+
+@keyframes bmiResultIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bmi-result-label {
+  margin-bottom: 8px;
+
+  color: var(--accent);
+
+  font-size: 10px;
+  font-weight: 850;
+
+  letter-spacing: 0.14em;
+}
+
+.bmi-result strong {
+  display: block;
+
+  margin-bottom: 10px;
+
+  font-size: clamp(46px, 8vw, 68px);
+
+  line-height: 1;
+
+  letter-spacing: -0.05em;
+
+  color: var(--text);
+
+  font-variant-numeric: tabular-nums;
+}
+
+.bmi-result > p {
+  max-width: 500px;
+
+  margin: 0 auto 18px;
+
+  color: var(--muted);
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Formula */
+
+.bmi-formula {
+  display: inline-block;
+
+  margin-bottom: 18px;
+  padding: 9px 14px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(35, 183, 163, 0.10);
+
+  color: var(--accent);
+
+  font-size: 12px;
+  font-weight: 750;
+}
+
+/* Important note */
+
+.bmi-important-note {
+  max-width: 620px;
+
+  margin: 0 auto 20px;
+  padding: 15px;
+
+  text-align: left;
+
+  border-radius: 13px;
+
+  background:
+    rgba(35, 183, 163, 0.06);
+
+  border:
+    1px solid rgba(35, 183, 163, 0.14);
+
+  color: var(--muted);
+
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.bmi-important-note b {
+  color: var(--text);
+}
+
+/* Ask AI */
+
+.bmi-ask {
+  display: inline-flex !important;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  min-height: 46px;
+
+  padding: 0 18px;
+
+  border-radius: 12px;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+[data-theme="dark"] .bmi-calculator {
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(35, 183, 163, 0.16),
+      transparent 38%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(35, 183, 163, 0.10),
+      rgba(255, 255, 255, 0.015)
+    );
+}
+
+[data-theme="dark"] .bmi-result {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(35, 183, 163, 0.12),
+      rgba(255, 255, 255, 0.02)
+    );
+}
+
+[data-theme="dark"] .bmi-input-wrap input {
+  background: rgba(8, 20, 24, 0.7);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+  .bmi-calculator {
+    margin-top: 24px;
+
+    padding: 21px 17px;
+
+    border-radius: 20px;
+  }
+
+  .bmi-header {
+    margin-bottom: 22px;
+  }
+
+  .bmi-header h2 {
+    font-size: 22px;
+  }
+
+  .bmi-header p {
+    font-size: 13px;
+  }
+
+  .bmi-icon {
+    width: 46px;
+    height: 46px;
+
+    flex-basis: 46px;
+
+    border-radius: 15px;
+
+    font-size: 22px;
+  }
+
+  .bmi-form {
+    grid-template-columns: 1fr;
+  }
+
+  .bmi-actions {
+    flex-direction: column;
+  }
+
+  .bmi-actions .primary,
+  .bmi-reset {
+    width: 100%;
+  }
+
+  .bmi-result {
+    padding: 22px 16px;
+  }
+
+  .bmi-result strong {
+    font-size: 54px;
+  }
+
+  .bmi-important-note {
+    text-align: left;
+  }
+
+  .bmi-ask {
+    width: 100%;
+  }
+}
+
+/* ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .bmi-result {
+    animation: none;
+  }
+  }
