@@ -2721,3 +2721,178 @@
     animation: none;
   }
   }
+/* =========================================
+   HEALTHSCOPE — BMI AI SYNOPSIS BUTTON
+========================================= */
+
+.bmi-ai-button {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  width: 100%;
+  min-height: 52px;
+
+  margin: 6px 0 14px;
+  padding: 0 20px;
+
+  border: 1px solid rgba(35, 183, 163, 0.45);
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(35, 183, 163, 0.20),
+      rgba(35, 183, 163, 0.08)
+    );
+
+  color: var(--text);
+
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+
+  letter-spacing: 0.01em;
+
+  cursor: pointer;
+  overflow: hidden;
+
+  box-shadow:
+    0 8px 24px rgba(35, 183, 163, 0.10);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+/* Premium glow */
+
+.bmi-ai-button::before {
+  content: "";
+
+  position: absolute;
+
+  width: 120px;
+  height: 120px;
+
+  top: -70px;
+  left: -30px;
+
+  border-radius: 50%;
+
+  background: rgba(35, 183, 163, 0.22);
+
+  filter: blur(25px);
+
+  pointer-events: none;
+}
+
+/* Keep text above glow */
+
+.bmi-ai-button > * {
+  position: relative;
+  z-index: 1;
+}
+
+.bmi-ai-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  border-color: var(--accent);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(35, 183, 163, 0.28),
+      rgba(35, 183, 163, 0.12)
+    );
+
+  box-shadow:
+    0 12px 32px rgba(35, 183, 163, 0.18);
+}
+
+.bmi-ai-button:active:not(:disabled) {
+  transform: translateY(0) scale(0.985);
+}
+
+.bmi-ai-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+/* Loading spinner */
+
+.bmi-ai-spinner {
+  width: 17px;
+  height: 17px;
+
+  flex: 0 0 17px;
+
+  border: 2px solid rgba(35, 183, 163, 0.25);
+  border-top-color: var(--accent);
+
+  border-radius: 50%;
+
+  animation: bmiSpin 0.75s linear infinite;
+}
+
+@keyframes bmiSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dark mode */
+
+[data-theme="dark"] .bmi-ai-button {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(35, 183, 163, 0.18),
+      rgba(255, 255, 255, 0.035)
+    );
+
+  border-color:
+    rgba(35, 183, 163, 0.38);
+
+  color: var(--text);
+}
+
+/* Light mode */
+
+[data-theme="light"] .bmi-ai-button {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(35, 183, 163, 0.14),
+      rgba(35, 183, 163, 0.05)
+    );
+}
+
+/* Mobile polish */
+
+@media (max-width: 700px) {
+
+  .bmi-ai-button {
+    min-height: 50px;
+
+    border-radius: 14px;
+
+    font-size: 13px;
+  }
+}
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .bmi-ai-button,
+  .bmi-ai-spinner {
+    transition: none;
+    animation: none;
+  }
+  }
