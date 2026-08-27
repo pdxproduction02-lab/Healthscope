@@ -1567,175 +1567,440 @@ const hasComparison = latestEntry && previousEntry;
 }
 function Control({ icon: Icon, name, value, children }) { return <div className="control"><div><span><Icon size={16} />{name}</span><b>{value}</b></div>{children}</div> }
 function Scale({ name, value, setValue }) { return <div className="control"><div><span><Sun size={16} />{name}</span><b>{value}/5</b></div><div className="scale">{[1, 2, 3, 4, 5].map(x => <button className={x === value ? 'sel' : ''} onClick={() => setValue(x)} key={x}>{x}</button>)}</div></div> }
-
 function LabelScope({ data, setData, done }) {
-  const videoRef = useRef(null), streamRef = useRef(null)
-  const [cameraOn, setCameraOn] = useState(false), [error, setError] = useState(''), [processing, setProcessing] = useState(false)
+  const videoRef = useRef(null);
+  const streamRef = useRef(null);
+
+  const [cameraOn, setCameraOn] = useState(false);
+  const [error, setError] = useState('');
+  const [processing, setProcessing] = useState(false);
+
   useEffect(() => {
-    if (cameraOn && videoRef.current && streamRef.current) videoRef.current.srcObject = streamRef.current
-  }, [cameraOn])
-  useEffect(() => () => stopCamera(), [])
-  const stopCamera = () => { streamRef.current?.getTracks().forEach(track => track.stop()); streamRef.current = null; setCameraOn(false) }
+    if (cameraOn && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+    }
+  }, [cameraOn]);
+
+  useEffect(() => {
+    return () => stopCamera();
+  }, []);
+
+  const stopCamera = () => {
+    streamRef.current?.getTracks().forEach(track => track.stop());
+    streamRef.current = null;
+    setCameraOn(false);
+  };
+
   const startCamera = async () => {
-    setError('')
-    if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) { setError('Camera access requires HTTPS and a supported browser. You can upload an image or use the demo label.'); return }
-    try { streamRef.current = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false }); setCameraOn(true) }
-    catch { setError('Camera access isn’t available. You can upload a photo or use the demo label instead.') }
-  }
+    setError('');
+
+    if (
+      !window.isSecureContext ||
+      !navigator.mediaDevices?.getUserMedia
+    ) {
+      setError(
+        'Camera access requires HTTPS and a supported browser. You can upload an image or use the demo label.'
+      );
+      return;
+    }
+
+    try {
+      streamRef.current = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: {
+            ideal: 'environment'
+          }
+        },
+        audio: false
+      });
+
+      setCameraOn(true);
+    } catch {
+      setError(
+        'Camera access isn’t available. You can upload a photo or use the demo label instead.'
+      );
+    }
+  };
+
   const analyzeImage = async (file) => {
-  if (!file) return;
+    if (!file) return;
 
-  setProcessing(true);
-  setError('');
+    setProcessing(true);
+    setError('');
 
-  try {
-    const reader = new FileReader();
+    try {
+      const reader = new FileReader();
 
-    reader.onload = async () => {
-      try {
-        const response = await fetch('/api/analyze-label', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            image: reader.result
-          })
-        });
+      reader.onload = async () => {
+        try {
+          const response = await fetch('/api/analyze-label', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              image: reader.result
+            })
+          });
 
-        const result = await response.json();
+          const result = await response.json();
 
-        if (!response.ok) {
-          throw new Error(result.error || 'Could not analyze this label.');
+          if (!response.ok) {
+            throw new Error(
+              result.error || 'Could not analyze this label.'
+            );
+          }
+
+          setData(result.data);
+          stopCamera();
+          done();
+        } catch (err) {
+          console.error(err);
+          setError(
+            'We could not confidently read this label. Try another photo.'
+          );
+        } finally {
+          setProcessing(false);
         }
+      };
 
-        setData(result.data);
-        stopCamera();
-        done();
-
-      } catch (err) {
-        console.error(err);
-        setError('We could not confidently read this label. Try another photo.');
-      } finally {
+      reader.onerror = () => {
+        setError(
+          'We could not read this image. Please try another one.'
+        );
         setProcessing(false);
-      }
-    };
+      };
 
-    reader.onerror = () => {
-      setError('We could not read this image. Please try another one.');
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.error(err);
+      setError(
+        'Something went wrong while preparing the image.'
+      );
       setProcessing(false);
-    };
+    }
+  };
 
-    reader.readAsDataURL(file);
+  const capturePhoto = () => {
+    if (!videoRef.current) return;
 
-  } catch (err) {
-    console.error(err);
-    setError('Something went wrong while preparing the image.');
-    setProcessing(false);
-  }
-};
+    const video = videoRef.current;
 
-const capturePhoto = () => {
-  if (!videoRef.current) return;
+    if (!video.videoWidth || !video.videoHeight) {
+      setError(
+        'Camera is still starting. Please wait a moment and try again.'
+      );
+      return;
+    }
 
-  const video = videoRef.current;
+    const canvas = document.createElement('canvas');
 
-  if (!video.videoWidth || !video.videoHeight) {
-    setError('Camera is still starting. Please wait a moment and try again.');
-    return;
-  }
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
-  const canvas = document.createElement('canvas');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+    const context = canvas.getContext('2d');
 
-  const context = canvas.getContext('2d');
-  context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  canvas.toBlob((blob) => {
-    if (!blob) {
+    if (!context) {
       setError('We could not capture the image. Please try again.');
       return;
     }
 
-    const file = new File(
-      [blob],
-      'label-photo.jpg',
-      { type: 'image/jpeg' }
+    context.drawImage(
+      video,
+      0,
+      0,
+      canvas.width,
+      canvas.height
     );
 
-    analyzeImage(file);
-  }, 'image/jpeg', 0.9);
-};
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) {
+          setError(
+            'We could not capture the image. Please try again.'
+          );
+          return;
+        }
 
-const useDemoLabel = () => {
-  setProcessing(true);
+        const file = new File(
+          [blob],
+          'label-photo.jpg',
+          {
+            type: 'image/jpeg'
+          }
+        );
 
-  setTimeout(() => {
-    stopCamera();
-    setData(demoLabel);
-    setProcessing(false);
-    done();
-  }, 500);
-};
-  if (data) return <LabelResult data={data} reset={() => setData(null)} />
+        analyzeImage(file);
+      },
+      'image/jpeg',
+      0.9
+    );
+  };
+
+  const useDemoLabel = () => {
+    setProcessing(true);
+
+    setTimeout(() => {
+      stopCamera();
+      setData(demoLabel);
+      setProcessing(false);
+      done();
+    }, 500);
+  };
+
+  if (data) {
+    return (
+      <LabelResult
+        data={data}
+        reset={() => setData(null)}
+      />
+    );
+  }
+
   return (
-  <>
-    <Title
-      k="LABELSCOPE"
-      h="Understand what’s inside your food."
-      p="Scan, upload, or use a demo label. Results are educational and nutritional context varies between people."
-    />
+    <>
+      <Title
+        k="LABELSCOPE"
+        h="Understand what’s inside your food."
+        p="Scan, upload, or use a demo label. Results are educational and nutritional context varies between people."
+      />
 
-    <section className="label-why card">
-      <div className="label-why-icon">
-        <Sparkles size={19} />
-      </div>
+      {/* WHY FOOD LABELS MATTER */}
 
-      <div className="label-why-content">
-        <label>WHY UNDERSTAND FOOD LABELS?</label>
-
-        <h3>
-          The front of a package doesn't tell the whole story.
-        </h3>
-
-        <p>
-          Nutrition facts, serving sizes, sugars, sodium, fats, protein,
-          and ingredients can give you a clearer picture of what a packaged
-          food contains.
-        </p>
-
-        <div className="label-why-points">
-          <div>
-            <span>🔍</span>
-            <strong>Know what's inside</strong>
-            <small>Explore ingredients and nutrition information.</small>
-          </div>
-
-          <div>
-            <span>📊</span>
-            <strong>Understand the numbers</strong>
-            <small>Put serving sizes and nutrient values into context.</small>
-          </div>
-
-          <div>
-            <span>🧠</span>
-            <strong>Make informed choices</strong>
-            <small>Use the label as a tool for learning, not judgment.</small>
-          </div>
+      <section className="label-why card">
+        <div className="label-why-icon">
+          <Sparkles size={19} />
         </div>
 
-        <small className="label-why-note">
-          <Info size={13} />
-          LabelScope provides educational information and does not determine
-          whether a food is medically appropriate for an individual.
-        </small>
-      </div>
-    </section>
+        <div className="label-why-content">
+          <label>WHY UNDERSTAND FOOD LABELS?</label>
 
-    <section className="scanlayout"><div className="card scanner">{cameraOn ? <><video ref={videoRef} autoPlay playsInline muted /><div className="camera-overlay"><span>Align the nutrition panel inside the frame</span></div><div className="camera-actions"><button className="secondary" onClick={stopCamera}>Cancel</button><button className="shutter" aria-label="Capture and analyze" onClick={capturePhoto}><Camera size={22} /></button></div></> : <div className="scanempty"><div className="scanicon"><ScanLine size={32} /></div><h2>Scan a packaged-food label</h2><p>Use your camera when available, or choose another input method.</p><button className="primary" onClick={startCamera}><Camera size={17} />Open camera</button><label className="secondary"><Upload size={17} />Upload image<input hidden type="file" accept="image/*" onChange={e => analyzeImage(e.target.files?.[0])} /></label><button className="link" onClick={useDemoLabel}>Use demo label</button>{processing && <small className="processing">Analyzing label…</small>}</div>}</div><div className="card how"><label>HOW IT WORKS</label>{[['01', 'Capture', 'Take a clear photo of the nutrition panel.'], ['02', 'Analyze', 'Extract readable nutrition information.'], ['03', 'Understand', 'Explore nutrients and ingredient functions.']].map(row => <div className="howrow" key={row[0]}><b>{row[0]}</b><span><strong>{row[1]}</strong>{row[2]}</span></div>)}<div className="notice"><Info size={16} /><span><b>Camera permissions</b><br />Production camera access requires HTTPS. If permission is denied, upload or manual entry remains available.</span></div></div></section>{error && <div className="error"><Info size={16} /><span>{error}</span><button onClick={() => setError('')}><X size={15} /></button></div>}</>
+          <h3>
+            The front of a package doesn’t tell the whole story.
+          </h3>
+
+          <p>
+            Nutrition facts, serving sizes, sugars, sodium, fats,
+            protein, and ingredients can give you a clearer picture
+            of what a packaged food contains.
+          </p>
+
+          <div className="label-why-points">
+
+            <div>
+              <span>🔍</span>
+              <strong>Know what’s inside</strong>
+              <small>
+                Explore ingredients and nutrition information.
+              </small>
+            </div>
+
+            <div>
+              <span>📊</span>
+              <strong>Understand the numbers</strong>
+              <small>
+                Put serving sizes and nutrient values into context.
+              </small>
+            </div>
+
+            <div>
+              <span>🧠</span>
+              <strong>Make informed choices</strong>
+              <small>
+                Use the label as a tool for learning, not judgment.
+              </small>
+            </div>
+
+          </div>
+
+          <small className="label-why-note">
+            <Info size={13} />
+
+            <span>
+              LabelScope provides educational information and does
+              not determine whether a food is medically appropriate
+              for an individual.
+            </span>
+          </small>
+        </div>
+      </section>
+
+
+      {/* SCANNER */}
+
+      <section className="scanlayout">
+
+        <div className="card scanner">
+
+          {cameraOn ? (
+            <>
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+              />
+
+              <div className="camera-overlay">
+                <span>
+                  Align the nutrition panel inside the frame
+                </span>
+              </div>
+
+              <div className="camera-actions">
+
+                <button
+                  className="secondary"
+                  onClick={stopCamera}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="shutter"
+                  aria-label="Capture and analyze"
+                  onClick={capturePhoto}
+                >
+                  <Camera size={22} />
+                </button>
+
+              </div>
+            </>
+          ) : (
+            <div className="scanempty">
+
+              <div className="scanicon">
+                <ScanLine size={32} />
+              </div>
+
+              <h2>
+                Scan a packaged-food label
+              </h2>
+
+              <p>
+                Use your camera when available, or choose another
+                input method.
+              </p>
+
+              <button
+                className="primary"
+                onClick={startCamera}
+              >
+                <Camera size={17} />
+                Open camera
+              </button>
+
+              <label className="secondary">
+                <Upload size={17} />
+                Upload image
+
+                <input
+                  hidden
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    analyzeImage(e.target.files?.[0])
+                  }
+                />
+              </label>
+
+              <button
+                className="link"
+                onClick={useDemoLabel}
+              >
+                Use demo label
+              </button>
+
+              {processing && (
+                <small className="processing">
+                  Analyzing label…
+                </small>
+              )}
+
+            </div>
+          )}
+
+        </div>
+
+
+        {/* HOW IT WORKS */}
+
+        <div className="card how">
+
+          <label>HOW IT WORKS</label>
+
+          {[
+            [
+              '01',
+              'Capture',
+              'Take a clear photo of the nutrition panel.'
+            ],
+            [
+              '02',
+              'Analyze',
+              'Extract readable nutrition information.'
+            ],
+            [
+              '03',
+              'Understand',
+              'Explore nutrients and ingredient functions.'
+            ]
+          ].map(row => (
+            <div
+              className="howrow"
+              key={row[0]}
+            >
+              <b>{row[0]}</b>
+
+              <span>
+                <strong>{row[1]}</strong>
+                {row[2]}
+              </span>
+            </div>
+          ))}
+
+          <div className="notice">
+
+            <Info size={16} />
+
+            <span>
+              <b>Camera permissions</b>
+              <br />
+
+              Production camera access requires HTTPS. If permission
+              is denied, upload or manual entry remains available.
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* ERROR */}
+
+      {error && (
+        <div className="error">
+
+          <Info size={16} />
+
+          <span>
+            {error}
+          </span>
+
+          <button
+            onClick={() => setError('')}
+          >
+            <X size={15} />
+          </button>
+
+        </div>
+      )}
+
+    </>
+  );
 }
-
 function LabelResult({ data, reset }) {
   const [aiSynopsis, setAiSynopsis] = useState(null);
   const [aiLoading, setAiLoading] = useState(true);
@@ -1815,6 +2080,7 @@ function LabelResult({ data, reset }) {
     }
 
     const num = parseFloat(value);
+
     return Number.isFinite(num) ? num : null;
   };
 
@@ -1986,7 +2252,6 @@ function LabelResult({ data, reset }) {
               {aiSynopsis.summary}
             </p>
 
-
             <div className="ai-highlights">
 
               {aiSynopsis.positive && (
@@ -2085,7 +2350,6 @@ function LabelResult({ data, reset }) {
 
           <b>Nutrition facts</b>
 
-
           {!nutritionDetected && (
             <div className="nutrition-missing">
 
@@ -2106,7 +2370,6 @@ function LabelResult({ data, reset }) {
 
             </div>
           )}
-
 
           {rows.map(([name, value, unit]) => {
 
@@ -2156,20 +2419,10 @@ function LabelResult({ data, reset }) {
 
           <b>Ingredient explorer</b>
 
-
           {Array.isArray(data.ingredients) &&
           data.ingredients.length > 0 ? (
 
             data.ingredients.map((item, i) => {
-
-              /*
-                Supports both:
-                1. Object format:
-                   { name, explanation }
-
-                2. Simple string format:
-                   "Whole grain oats"
-              */
 
               const ingredientName =
                 typeof item === 'string'
@@ -2229,7 +2482,6 @@ function LabelResult({ data, reset }) {
           EDUCATIONAL SIGNALS
         </label>
 
-
         <div className="signals">
 
           <span>
@@ -2250,7 +2502,6 @@ function LabelResult({ data, reset }) {
 
         </div>
 
-
         <small>
           These are simple educational descriptions based
           on values detected from the scanned label. They
@@ -2259,10 +2510,9 @@ function LabelResult({ data, reset }) {
         </small>
 
       </div>
-
     </>
   );
- }
+            }
           
 function MeditationTimer() {
   const durations = [1, 3, 5, 10];
