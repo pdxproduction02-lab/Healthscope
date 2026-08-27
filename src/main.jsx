@@ -2640,11 +2640,11 @@ const labelInsightCategory =
           whether a food is right for an individual.
         </small>
 
-      </div>
+            </div>
     </>
   );
-            }
-          
+}
+
 function MeditationTimer() {
   const durations = [1, 3, 5, 10];
 
