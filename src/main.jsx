@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import './styles.css'
+import SplashScreen from "./SplashScreen";
 const LEARN_TOPICS = [
   {
     id: 'heart',
@@ -3515,7 +3516,12 @@ function Chat({ close, initialQuestion }) {
     
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}))
 
-createRoot(document.getElementById('root')).render(<App />)
+createRoot(document.getElementById('root')).render(
+  <>
+    <SplashScreen />
+    <App />
+  </>
+)
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
