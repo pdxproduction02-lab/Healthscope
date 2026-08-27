@@ -2644,7 +2644,6 @@ const labelInsightCategory =
             </div>
     </>
   );
-}
 
 function MeditationTimer() {
   const durations = [1, 3, 5, 10];
