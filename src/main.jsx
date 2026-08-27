@@ -1954,11 +1954,15 @@ if (selectedTopic) {
 
             <button
   type="button"
-  className="learn-explore"
-  onClick={() => setSelectedTopic(topic)}
+  className="primary learn-article-ask"
+  onClick={() =>
+    askTopic?.(
+      `I am reading about "${selectedTopic.title}". Please help me understand this topic clearly in an educational way.`
+    )
+  }
 >
-  Explore topic
-  <ChevronRight size={16} />
+  <MessageCircle size={17} />
+  Ask HealthScope
 </button>
 
           </section>
@@ -2084,17 +2088,13 @@ if (selectedTopic) {
 
                   <div className="learn-topic-actions">
                     <button
-                      type="button"
-                      className="learn-explore"
-                      onClick={() =>
-                        askTopic?.(
-                          `I want to learn about: ${topic.title}`
-                        )
-                      }
-                    >
-                      Explore topic
-                      <ChevronRight size={16} />
-                    </button>
+  type="button"
+  className="learn-explore"
+  onClick={() => setSelectedTopic(topic)}
+>
+  Explore article
+  <ChevronRight size={16} />
+</button>
 
                     <button
                       type="button"
