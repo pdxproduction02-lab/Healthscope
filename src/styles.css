@@ -1613,3 +1613,36 @@
     padding: 17px;
   }
 }
+/* FORCE EXPLORE ARTICLE BUTTON VISIBILITY */
+
+.learn-topic-card .learn-explore {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  flex: 1 !important;
+
+  min-height: 44px !important;
+  padding: 0 14px !important;
+
+  background: var(--accent) !important;
+  color: #06211e !important;
+
+  border: 1px solid var(--accent) !important;
+  border-radius: 12px !important;
+
+  font-size: 13px !important;
+  font-weight: 800 !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+
+  cursor: pointer !important;
+}
+
+.learn-topic-card .learn-explore svg {
+  display: block !important;
+  color: inherit !important;
+  stroke: currentColor !important;
+}
