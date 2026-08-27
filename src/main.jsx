@@ -321,6 +321,45 @@ const LEARN_TOPICS = [
       'What are sleep stages?',
       'Why do I feel tired after poor sleep?'
     ]
+  },
+  {
+  id: 'meditation',
+  icon: '🧘',
+  category: 'Mental Wellness',
+  title: 'Meditation and mindful pauses',
+  summary:
+    'Learn how short periods of mindful attention and calm breathing can be used as a relaxation practice.',
+  intro:
+    'Meditation is a practice of intentionally paying attention to the present moment. Some people use it as a quiet pause, a breathing practice, or a way to develop awareness. Experiences vary from person to person.',
+  sections: [
+    {
+      heading: 'What is meditation?',
+      text:
+        'Meditation includes a range of practices that involve intentionally directing attention. A simple practice may involve sitting comfortably and gently returning attention to the breath whenever the mind wanders.'
+    },
+    {
+      heading: 'Why take a mindful pause?',
+      text:
+        'A short pause can provide time to slow down, notice your surroundings, and focus on the present moment. Some people find regular practice helpful for relaxation or concentration, although individual experiences can differ.'
+    },
+    {
+      heading: 'A simple approach',
+      text:
+        'Choose a comfortable position, breathe naturally, and notice the sensation of breathing. There is no need to force thoughts away; simply notice when attention has wandered and gently return to the present activity.'
+    }
+  ],
+  fact:
+    'Meditation does not require a special location or long session. Even a short intentional pause can be used to practice mindful attention.',
+  myth:
+    'Meditation means completely stopping all thoughts.',
+  truth:
+    'Thoughts naturally occur. Many meditation practices focus on noticing them without judgment and gently returning attention to a chosen point of focus.',
+  aiQuestions: [
+    'What is meditation?',
+    'How can I start a simple mindfulness practice?',
+    'What should I focus on during meditation?'
+  ],
+  special: 'meditation'
   }
 ]
 
