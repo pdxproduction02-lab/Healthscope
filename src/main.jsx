@@ -1862,6 +1862,139 @@ if (nutritionDetected && ingredientCount > 0) {
     </>
   );
 }
+function MeditationTimer() {
+  const durations = [1, 3, 5, 10];
+
+  const [selectedMinutes, setSelectedMinutes] = useState(3);
+  const [secondsLeft, setSecondsLeft] = useState(3 * 60);
+  const [isRunning, setIsRunning] = useState(false);
+
+  const totalSeconds = selectedMinutes * 60;
+  const progress =
+    totalSeconds > 0
+      ? ((totalSeconds - secondsLeft) / totalSeconds) * 100
+      : 0;
+
+  useEffect(() => {
+    if (!isRunning) return;
+
+    if (secondsLeft <= 0) {
+      setIsRunning(false);
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setSecondsLeft((current) => {
+        if (current <= 1) {
+          setIsRunning(false);
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isRunning, secondsLeft]);
+
+  const selectDuration = (minutes) => {
+    setIsRunning(false);
+    setSelectedMinutes(minutes);
+    setSecondsLeft(minutes * 60);
+  };
+
+  const resetTimer = () => {
+    setIsRunning(false);
+    setSecondsLeft(selectedMinutes * 60);
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const breathingMessage =
+    !isRunning
+      ? 'Take a comfortable position and begin when ready.'
+      : secondsLeft % 8 < 4
+        ? 'Breathe in slowly…'
+        : 'Breathe out gently…';
+
+  return (
+    <section className="meditation-timer">
+      <div className="meditation-header">
+        <div>
+          <label>MINDFUL PAUSE</label>
+          <h2>Take a moment for yourself</h2>
+          <p>
+            Choose a short session and focus gently on your breathing.
+          </p>
+        </div>
+
+        <div className="meditation-icon">🧘</div>
+      </div>
+
+      <div className="meditation-duration">
+        {durations.map((minutes) => (
+          <button
+            key={minutes}
+            type="button"
+            className={selectedMinutes === minutes ? 'active' : ''}
+            onClick={() => selectDuration(minutes)}
+            disabled={isRunning}
+          >
+            {minutes} min
+          </button>
+        ))}
+      </div>
+
+      <div className="meditation-clock-wrap">
+        <div
+          className="meditation-clock"
+          style={{
+            '--progress': `${progress}%`
+          }}
+        >
+          <div className="meditation-clock-inner">
+            <strong>{formatTime(secondsLeft)}</strong>
+            <span>{isRunning ? 'IN SESSION' : 'READY'}</span>
+          </div>
+        </div>
+      </div>
+
+      <p className="meditation-breathing">
+        {breathingMessage}
+      </p>
+
+      <div className="meditation-controls">
+        <button
+          type="button"
+          className="primary meditation-start"
+          onClick={() => setIsRunning(!isRunning)}
+          disabled={secondsLeft === 0}
+        >
+          {isRunning ? 'Pause' : secondsLeft === 0 ? 'Completed' : 'Start session'}
+        </button>
+
+        <button
+          type="button"
+          className="meditation-reset"
+          onClick={resetTimer}
+        >
+          Reset
+        </button>
+      </div>
+
+      {secondsLeft === 0 && (
+        <div className="meditation-complete">
+          ✨ Session complete. Take a moment to notice how you feel.
+        </div>
+      )}
+    </section>
+  );
+      }
 
 function Learn({ askTopic }) {
   const [search, setSearch] = useState('');
@@ -1947,6 +2080,9 @@ if (selectedTopic) {
             ))}
 
           </section>
+          {selectedTopic.special === 'meditation' && (
+  <MeditationTimer />
+)}
 
           {selectedTopic.fact && (
             <section className="learn-fact-box">
