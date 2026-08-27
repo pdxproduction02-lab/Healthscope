@@ -1763,14 +1763,16 @@ function LabelResult({ data, reset }) {
         const result = await response.json();
 
         if (!response.ok) {
-          throw new Error(result.error || 'Could not generate synopsis.');
+          throw new Error(
+            result.error || 'Could not generate synopsis.'
+          );
         }
 
         if (!cancelled) {
           setAiSynopsis(result.data);
         }
       } catch (error) {
-        console.error(error);
+        console.error('LabelScope AI synopsis error:', error);
 
         if (!cancelled) {
           setAiError(
@@ -1808,7 +1810,9 @@ function LabelResult({ data, reset }) {
       value === null ||
       value === '' ||
       value === 'Not detected'
-    ) return null;
+    ) {
+      return null;
+    }
 
     const num = parseFloat(value);
     return Number.isFinite(num) ? num : null;
@@ -1818,44 +1822,47 @@ function LabelResult({ data, reset }) {
   const fiber = numberValue(data.fiber);
   const protein = numberValue(data.protein);
   const sodium = numberValue(data.sodium);
+
   const nutritionValues = [
-  data.calories,
-  data.protein,
-  data.carbs,
-  data.sugars,
-  data.fat,
-  data.satFat,
-  data.sodium,
-  data.fiber
-];
+    data.calories,
+    data.protein,
+    data.carbs,
+    data.sugars,
+    data.fat,
+    data.satFat,
+    data.sodium,
+    data.fiber
+  ];
 
-const nutritionDetected = nutritionValues.some(
-  value => numberValue(value) !== null
-);
-const ingredientCount = Array.isArray(data.ingredients)
-  ? data.ingredients.length
-  : 0;
+  const nutritionDetected = nutritionValues.some(
+    value => numberValue(value) !== null
+  );
 
-const productName =
-  data.product && data.product !== 'Not detected'
-    ? data.product
-    : 'this packaged food';
+  const ingredientCount = Array.isArray(data.ingredients)
+    ? data.ingredients.length
+    : 0;
 
-let quickOverview = '';
+  const productName =
+    data.product && data.product !== 'Not detected'
+      ? data.product
+      : 'this packaged food';
 
-if (nutritionDetected && ingredientCount > 0) {
-  quickOverview =
-    `This scan shows ${productName}. Nutrition information was detected for the listed serving size, and ${ingredientCount} ingredient${ingredientCount === 1 ? '' : 's'} ${ingredientCount === 1 ? 'was' : 'were'} identified from the visible label.`;
-} else if (nutritionDetected) {
-  quickOverview =
-    `This scan shows ${productName}. Nutrition information was detected for the listed serving size.`;
-} else if (ingredientCount > 0) {
-  quickOverview =
-    `This scan shows ${productName}. Ingredient information was detected, but nutrition values were not visible in the uploaded image.`;
-} else {
-  quickOverview =
-    `This scan shows ${productName}. Limited structured information could be extracted from the uploaded image.`;
-}
+  let quickOverview = '';
+
+  if (nutritionDetected && ingredientCount > 0) {
+    quickOverview =
+      `This scan shows ${productName}. Nutrition information was detected for the listed serving size, and ${ingredientCount} ingredient${ingredientCount === 1 ? '' : 's'} ${ingredientCount === 1 ? 'was' : 'were'} identified from the visible label.`;
+  } else if (nutritionDetected) {
+    quickOverview =
+      `This scan shows ${productName}. Nutrition information was detected for the listed serving size.`;
+  } else if (ingredientCount > 0) {
+    quickOverview =
+      `This scan shows ${productName}. Ingredient information was detected, but nutrition values were not visible in the uploaded image.`;
+  } else {
+    quickOverview =
+      `This scan shows ${productName}. Limited structured information could be extracted from the uploaded image.`;
+  }
+
   const sugarSignal =
     sugar === null
       ? 'Not listed'
@@ -1893,125 +1900,216 @@ if (nutritionDetected && ingredientCount > 0) {
       : 'Higher';
 
   return (
-    <><div className="quick-overview">
-  <div className="quick-overview-icon">
-    <Sparkles size={18} />
-  </div>
+    <>
+      {/* QUICK OVERVIEW */}
 
-  <div>
-    <label>QUICK OVERVIEW</label>
-    <p>{quickOverview}</p>
-  </div>
-</div>
+      <div className="quick-overview">
+        <div className="quick-overview-icon">
+          <Sparkles size={18} />
+        </div>
+
+        <div>
+          <label>QUICK OVERVIEW</label>
+          <p>{quickOverview}</p>
+        </div>
+      </div>
+
+
+      {/* RESULT HEADER */}
+
       <div className="resulttop">
         <div>
           <label>EDUCATIONAL SNAPSHOT</label>
+
           <h2>{data.product}</h2>
-          <small>Serving size · {data.serving}</small>
+
+          <small>
+            Serving size · {data.serving}
+          </small>
         </div>
 
-        <button className="secondary" onClick={reset}>
+        <button
+          className="secondary"
+          onClick={reset}
+        >
           New label
         </button>
       </div>
-<section className="card ai-synopsis">
-  <div className="ai-synopsis-header">
-    <div className="ai-synopsis-title">
-      <div className="ai-synopsis-icon">
-        <Sparkles size={18} />
-      </div>
 
-      <div>
-        <label>LABELSCOPE AI</label>
-        <h3>Food label synopsis</h3>
-      </div>
-    </div>
 
-    <span className="ai-badge">EDUCATIONAL</span>
-  </div>
+      {/* LABELSCOPE AI SYNOPSIS */}
 
-  {aiLoading ? (
-    <div className="ai-loading">
-      <div className="ai-loading-dot" />
-      <span>
-        Reading the detected label information…
-      </span>
-    </div>
-  ) : aiSynopsis ? (
-    <>
-      <p className="ai-summary">
-        {aiSynopsis.summary}
-      </p>
+      <section className="card ai-synopsis">
 
-      <div className="ai-highlights">
+        <div className="ai-synopsis-header">
 
-        {aiSynopsis.positive && (
-          <div className="ai-highlight positive">
-            <span>✓</span>
-            <div>
-              <b>Worth noticing</b>
-              <p>{aiSynopsis.positive}</p>
+          <div className="ai-synopsis-title">
+
+            <div className="ai-synopsis-icon">
+              <Sparkles size={18} />
             </div>
+
+            <div>
+              <label>LABELSCOPE AI</label>
+              <h3>Food label synopsis</h3>
+            </div>
+
+          </div>
+
+          <span className="ai-badge">
+            EDUCATIONAL
+          </span>
+
+        </div>
+
+
+        {/* AI LOADING */}
+
+        {aiLoading && (
+          <div className="ai-loading">
+
+            <div className="ai-loading-dot" />
+
+            <span>
+              Reading the detected label information…
+            </span>
+
           </div>
         )}
 
-        {aiSynopsis.attention && (
-          <div className="ai-highlight attention">
-            <span>!</span>
-            <div>
-              <b>Keep in mind</b>
-              <p>{aiSynopsis.attention}</p>
+
+        {/* AI RESULT */}
+
+        {!aiLoading && aiSynopsis && (
+          <>
+            <p className="ai-summary">
+              {aiSynopsis.summary}
+            </p>
+
+
+            <div className="ai-highlights">
+
+              {aiSynopsis.positive && (
+                <div className="ai-highlight positive">
+
+                  <span>✓</span>
+
+                  <div>
+                    <b>Worth noticing</b>
+
+                    <p>
+                      {aiSynopsis.positive}
+                    </p>
+                  </div>
+
+                </div>
+              )}
+
+
+              {aiSynopsis.attention && (
+                <div className="ai-highlight attention">
+
+                  <span>!</span>
+
+                  <div>
+                    <b>Keep in mind</b>
+
+                    <p>
+                      {aiSynopsis.attention}
+                    </p>
+                  </div>
+
+                </div>
+              )}
+
+
+              {aiSynopsis.ingredients && (
+                <div className="ai-highlight ingredients">
+
+                  <span>⌁</span>
+
+                  <div>
+                    <b>Ingredient note</b>
+
+                    <p>
+                      {aiSynopsis.ingredients}
+                    </p>
+                  </div>
+
+                </div>
+              )}
+
             </div>
+
+
+            <div className="ai-disclaimer">
+
+              <Info size={14} />
+
+              <span>
+                AI-generated educational information based only
+                on detected label data. Missing information is
+                not assumed.
+              </span>
+
+            </div>
+          </>
+        )}
+
+
+        {/* AI ERROR */}
+
+        {!aiLoading && !aiSynopsis && (
+          <div className="ai-error">
+
+            <Info size={16} />
+
+            <span>
+              {aiError ||
+                'The AI synopsis could not be generated. The scanned label information is still available below.'}
+            </span>
+
           </div>
         )}
 
-        {aiSynopsis.ingredients && (
-          <div className="ai-highlight ingredients">
-            <span>⌁</span>
-            <div>
-              <b>Ingredient note</b>
-              <p>{aiSynopsis.ingredients}</p>
-            </div>
-          </div>
-        )}
+      </section>
 
-      </div>
 
-      <div className="ai-disclaimer">
-        <Info size={14} />
-        <span>
-          AI-generated educational information based only on detected
-          label data. Missing information is not assumed.
-        </span>
-      </div>
-    </>
-  ) : (
-    <div className="ai-error">
-      <Info size={16} />
-      <span>{aiError}</span>
-    </div>
-  )}
-</section>
+      {/* NUTRITION + INGREDIENTS */}
 
-<section className="resultgrid">
       <section className="resultgrid">
 
+        {/* NUTRITION FACTS */}
+
         <div className="card pad">
-  <b>Nutrition facts</b>
 
-  {!nutritionDetected && (
-    <div className="nutrition-missing">
-      <Info size={17} />
-      <span>
-        <b>Nutrition information wasn't visible</b>
-        <small>
-          Try scanning the Nutrition Facts panel for calories and nutrient values.
-        </small>
-      </span>
-    </div>
-  )}
+          <b>Nutrition facts</b>
 
-  {rows.map(([name, value, unit]) => {
+
+          {!nutritionDetected && (
+            <div className="nutrition-missing">
+
+              <Info size={17} />
+
+              <span>
+
+                <b>
+                  Nutrition information wasn't visible
+                </b>
+
+                <small>
+                  Try scanning the Nutrition Facts panel
+                  for calories and nutrient values.
+                </small>
+
+              </span>
+
+            </div>
+          )}
+
+
+          {rows.map(([name, value, unit]) => {
+
             const missing =
               value === undefined ||
               value === null ||
@@ -2019,49 +2117,121 @@ if (nutritionDetected && ingredientCount > 0) {
               value === 'Not detected';
 
             return (
-              <div className="nut" key={name}>
-                <span>{name}</span>
+              <div
+                className="nut"
+                key={name}
+              >
+
+                <span>
+                  {name}
+                </span>
 
                 <b>
+
                   {missing ? (
-                    <small>Not listed on scanned label</small>
+                    <small>
+                      Not listed on scanned label
+                    </small>
                   ) : (
                     <>
-                      {value} <small>{unit}</small>
+                      {value}{' '}
+                      <small>
+                        {unit}
+                      </small>
                     </>
                   )}
+
                 </b>
+
               </div>
             );
           })}
+
         </div>
 
+
+        {/* INGREDIENT EXPLORER */}
+
         <div className="card pad">
+
           <b>Ingredient explorer</b>
 
-          {data.ingredients.length > 0 ? (
-            data.ingredients.map((item, i) => (
-  <div className="ingredient" key={`${item.name}-${i}`}>
-    <i>{i + 1}</i>
 
-    <span>
-      <b>{item.name}</b>
-      {item.explanation ||
-        'General function may vary depending on the product formulation.'}
-    </span>
-  </div>
-))
+          {Array.isArray(data.ingredients) &&
+          data.ingredients.length > 0 ? (
+
+            data.ingredients.map((item, i) => {
+
+              /*
+                Supports both:
+                1. Object format:
+                   { name, explanation }
+
+                2. Simple string format:
+                   "Whole grain oats"
+              */
+
+              const ingredientName =
+                typeof item === 'string'
+                  ? item
+                  : item?.name || 'Unknown ingredient';
+
+              const explanation =
+                typeof item === 'string'
+                  ? ingredientInfo[ingredientName] ||
+                    'General function may vary depending on the product formulation.'
+                  : item?.explanation ||
+                    ingredientInfo[ingredientName] ||
+                    'General function may vary depending on the product formulation.';
+
+              return (
+                <div
+                  className="ingredient"
+                  key={`${ingredientName}-${i}`}
+                >
+
+                  <i>
+                    {i + 1}
+                  </i>
+
+                  <span>
+
+                    <b>
+                      {ingredientName}
+                    </b>
+
+                    {explanation}
+
+                  </span>
+
+                </div>
+              );
+            })
+
           ) : (
-            <p>No ingredients were detected in the scanned image.</p>
+
+            <p>
+              No ingredients were detected in the scanned image.
+            </p>
+
           )}
+
         </div>
 
       </section>
 
+
+      {/* EDUCATIONAL SIGNALS */}
+
       <div className="card pad compare">
-        <label>EDUCATIONAL SIGNALS</label>
+
+        <label>
+          EDUCATIONAL SIGNALS
+        </label>
+
 
         <div className="signals">
+
           <span>
             Sugar <b>{sugarSignal}</b>
           </span>
@@ -2077,17 +2247,23 @@ if (nutritionDetected && ingredientCount > 0) {
           <span>
             Sodium <b>{sodiumSignal}</b>
           </span>
+
         </div>
 
+
         <small>
-          These are simple educational descriptions based on values detected
-          from the scanned label. They are not a medical score and do not
-          determine whether a food is right for an individual.
+          These are simple educational descriptions based
+          on values detected from the scanned label. They
+          are not a medical score and do not determine
+          whether a food is right for an individual.
         </small>
+
       </div>
+
     </>
   );
-}
+ }
+          
 function MeditationTimer() {
   const durations = [1, 3, 5, 10];
 
