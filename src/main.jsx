@@ -2340,100 +2340,81 @@ const labelInsightCategory =
         )}
 
 
-        {/* AI RESULT */}
+  {/* AI LOADING */}
 
-        {!aiLoading && aiSynopsis && (
-          <>
-            <p className="ai-summary">
-              {aiSynopsis.summary}
-            </p>
+{aiLoading && (
+  <div className="ai-loading">
+    <Sparkles size={16} />
+    <span>Reading the detected label information…</span>
+  </div>
+)}
 
-            <div className="ai-highlights">
+{/* AI SYNOPSIS */}
 
-              {aiSynopsis.positive && (
-                <div className="ai-highlight positive">
+{!aiLoading && aiSynopsis && (
+  <div className="ai-synopsis-content">
 
-                  <span>✓</span>
+    {aiSynopsis.synopsis && (
+      <p className="ai-summary">
+        {aiSynopsis.synopsis}
+      </p>
+    )}
 
-                  <div>
-                    <b>Worth noticing</b>
+    {aiSynopsis.worthNoticing && (
+      <div className="ai-point positive">
+        <span>✓</span>
 
-                    <p>
-                      {aiSynopsis.positive}
-                    </p>
-                  </div>
+        <div>
+          <strong>Worth noticing</strong>
+          <p>{aiSynopsis.worthNoticing}</p>
+        </div>
+      </div>
+    )}
 
-                </div>
-              )}
+    {aiSynopsis.keepInMind && (
+      <div className="ai-point attention">
+        <span>!</span>
 
+        <div>
+          <strong>Keep in mind</strong>
+          <p>{aiSynopsis.keepInMind}</p>
+        </div>
+      </div>
+    )}
 
-              {aiSynopsis.attention && (
-                <div className="ai-highlight attention">
+    {aiSynopsis.ingredientNote && (
+      <div className="ai-point ingredient-note">
+        <span>⌁</span>
 
-                  <span>!</span>
+        <div>
+          <strong>Ingredient note</strong>
+          <p>{aiSynopsis.ingredientNote}</p>
+        </div>
+      </div>
+    )}
 
-                  <div>
-                    <b>Keep in mind</b>
+    <small className="ai-disclaimer">
+      AI-generated educational information based only on detected
+      label data. Missing information is not assumed.
+    </small>
 
-                    <p>
-                      {aiSynopsis.attention}
-                    </p>
-                  </div>
+  </div>
+)}
 
-                </div>
-              )}
+{/* AI ERROR */}
 
+{!aiLoading && !aiSynopsis && (
+  <div className="ai-error">
 
-              {aiSynopsis.ingredients && (
-                <div className="ai-highlight ingredients">
+    <Info size={16} />
 
-                  <span>⌁</span>
+    <span>
+      {aiError ||
+        'The AI synopsis could not be generated. The scanned label information is still available below.'}
+    </span>
 
-                  <div>
-                    <b>Ingredient note</b>
-
-                    <p>
-                      {aiSynopsis.ingredients}
-                    </p>
-                  </div>
-
-                </div>
-              )}
-
-            </div>
-
-
-            <div className="ai-disclaimer">
-
-              <Info size={14} />
-
-              <span>
-                AI-generated educational information based only
-                on detected label data. Missing information is
-                not assumed.
-              </span>
-
-            </div>
-          </>
-        )}
-
-
-        {/* AI ERROR */}
-
-        {!aiLoading && !aiSynopsis && (
-          <div className="ai-error">
-
-            <Info size={16} />
-
-            <span>
-              {aiError ||
-                'The AI synopsis could not be generated. The scanned label information is still available below.'}
-            </span>
-
-          </div>
-        )}
-
-      </section>
+  </div>
+)}
 
 
       {/* NUTRITION + INGREDIENTS */}
