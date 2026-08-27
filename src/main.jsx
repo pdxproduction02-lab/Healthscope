@@ -2001,7 +2001,103 @@ function LabelScope({ data, setData, done }) {
     </>
   );
 }
+function calculateLabelInsightScore(data) {
+  let score = 3;
+
+  const getNumber = (value) => {
+    if (
+      value === undefined ||
+      value === null ||
+      value === '' ||
+      value === 'Not detected'
+    ) {
+      return null;
+    }
+
+    const number = parseFloat(value);
+
+    return Number.isFinite(number) ? number : null;
+  };
+
+  const sugar = getNumber(data.sugars);
+  const sodium = getNumber(data.sodium);
+  const fiber = getNumber(data.fiber);
+  const protein = getNumber(data.protein);
+  const satFat = getNumber(data.satFat);
+
+  /*
+   * This is an educational label-profile score.
+   * It is NOT a health score or medical recommendation.
+   *
+   * Start from a neutral midpoint.
+   */
+  
+  // Sugar signal
+  if (sugar !== null) {
+    if (sugar <= 5) score += 0.5;
+    else if (sugar > 20) score -= 0.7;
+    else if (sugar > 10) score -= 0.4;
+  }
+
+  // Fiber signal
+  if (fiber !== null) {
+    if (fiber >= 5) score += 0.5;
+    else if (fiber >= 3) score += 0.25;
+  }
+
+  // Protein signal
+  if (protein !== null) {
+    if (protein >= 10) score += 0.35;
+    else if (protein >= 5) score += 0.15;
+  }
+
+  // Sodium signal
+  if (sodium !== null) {
+    if (sodium < 120) score += 0.25;
+    else if (sodium >= 400) score -= 0.5;
+    else if (sodium >= 300) score -= 0.25;
+  }
+
+  // Saturated fat signal
+  if (satFat !== null) {
+    if (satFat >= 5) score -= 0.45;
+    else if (satFat >= 2) score -= 0.2;
+  }
+
+  /*
+   * Keep the score within 1–5.
+   */
+  score = Math.max(1, Math.min(5, score));
+
+  /*
+   * Round to one decimal place.
+   */
+  return Math.round(score * 10) / 10;
+}
+
+function getLabelInsightCategory(score) {
+  if (score < 2) {
+    return 'Several label factors worth understanding';
+  }
+
+  if (score < 3) {
+    return 'Several factors worth noticing';
+  }
+
+  if (score < 4) {
+    return 'Mixed label profile';
+  }
+
+  if (score < 4.6) {
+    return 'Generally favorable label profile';
+  }
+
+  return 'Strong label profile';
+    }
 function LabelResult({ data, reset }) {
+  const labelInsightScore = calculateLabelInsightScore(data);
+const labelInsightCategory =
+  getLabelInsightCategory(labelInsightScore);
   const [aiSynopsis, setAiSynopsis] = useState(null);
   const [aiLoading, setAiLoading] = useState(true);
   const [aiError, setAiError] = useState('');
@@ -2341,6 +2437,60 @@ function LabelResult({ data, reset }) {
 
 
       {/* NUTRITION + INGREDIENTS */}
+      <section className="label-insight-score card">
+
+  <div className="label-score-left">
+
+    <div className="label-score-icon">
+      ⭐
+    </div>
+
+    <div>
+      <label>LABEL INSIGHT SCORE</label>
+
+      <h3>
+        Educational label profile
+      </h3>
+
+      <p>
+        A transparent score based on detected nutrition
+        signals. It is not a measure of overall health.
+      </p>
+    </div>
+
+  </div>
+
+
+  <div className="label-score-number">
+
+    <strong>
+      {labelInsightScore}
+    </strong>
+
+    <span>/ 5</span>
+
+  </div>
+
+
+  <div className="label-score-category">
+    {labelInsightCategory}
+  </div>
+
+
+  <div className="label-score-disclaimer">
+
+    <Info size={14} />
+
+    <span>
+      This score is an educational summary of selected
+      label signals. It does not determine whether a food
+      is healthy, unhealthy, or appropriate for an
+      individual.
+    </span>
+
+  </div>
+
+</section>
 
       <section className="resultgrid">
 
