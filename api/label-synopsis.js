@@ -86,23 +86,32 @@ or:
 
 Do not present OCR-derived information as independently verified laboratory data.
 
-Create four short sections:
+Create exactly four fields:
 
-1. summary
+1. synopsis
 A concise 2–4 sentence overview.
 
-2. positive
+2. worthNoticing
 One useful or potentially favorable observation supported by the detected label data.
 If none exists, return an empty string.
 
-3. attention
+3. keepInMind
 One important label factor worth noticing.
 If none exists, return an empty string.
 
-4. ingredients
+4. ingredientNote
 One concise educational observation about the ingredient list.
 
 Do not make health claims about individual ingredients simply because they appear on the label.
+
+Return ONLY valid JSON matching this structure:
+
+{
+  "synopsis": "string",
+  "worthNoticing": "string",
+  "keepInMind": "string",
+  "ingredientNote": "string"
+}
 
 LABEL DATA:
 
@@ -137,28 +146,28 @@ ${JSON.stringify(labelData, null, 2)}
               type: 'object',
 
               properties: {
-                summary: {
+                synopsis: {
                   type: 'string'
                 },
 
-                positive: {
+                worthNoticing: {
                   type: 'string'
                 },
 
-                attention: {
+                keepInMind: {
                   type: 'string'
                 },
 
-                ingredients: {
+                ingredientNote: {
                   type: 'string'
                 }
               },
 
               required: [
-                'summary',
-                'positive',
-                'attention',
-                'ingredients'
+                'synopsis',
+                'worthNoticing',
+                'keepInMind',
+                'ingredientNote'
               ]
             }
           }
@@ -213,24 +222,24 @@ ${JSON.stringify(labelData, null, 2)}
 
     return res.status(200).json({
       data: {
-        summary:
-          typeof synopsis.summary === 'string'
-            ? synopsis.summary
+        synopsis:
+          typeof synopsis.synopsis === 'string'
+            ? synopsis.synopsis
             : '',
 
-        positive:
-          typeof synopsis.positive === 'string'
-            ? synopsis.positive
+        worthNoticing:
+          typeof synopsis.worthNoticing === 'string'
+            ? synopsis.worthNoticing
             : '',
 
-        attention:
-          typeof synopsis.attention === 'string'
-            ? synopsis.attention
+        keepInMind:
+          typeof synopsis.keepInMind === 'string'
+            ? synopsis.keepInMind
             : '',
 
-        ingredients:
-          typeof synopsis.ingredients === 'string'
-            ? synopsis.ingredients
+        ingredientNote:
+          typeof synopsis.ingredientNote === 'string'
+            ? synopsis.ingredientNote
             : ''
       }
     });
