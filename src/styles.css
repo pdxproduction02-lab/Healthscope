@@ -2896,3 +2896,294 @@
     animation: none;
   }
   }
+/* ================================
+   LABELSCOPE — EDUCATION CARD
+================================ */
+
+.label-why {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.label-why-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--accent-soft, rgba(99, 102, 241, 0.10));
+  color: var(--accent, #6366f1);
+}
+
+.label-why-content {
+  flex: 1;
+}
+
+.label-why-content > label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
+  opacity: 0.55;
+}
+
+.label-why-content h3 {
+  margin: 0 0 7px;
+  font-size: 17px;
+  line-height: 1.3;
+}
+
+.label-why-content > p {
+  margin: 0;
+  max-width: 760px;
+  font-size: 13px;
+  line-height: 1.6;
+  opacity: 0.68;
+}
+
+.label-why-points {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.label-why-points > div {
+  padding: 12px;
+  border-radius: 13px;
+  background: rgba(127, 127, 127, 0.055);
+}
+
+.label-why-points span {
+  display: block;
+  font-size: 17px;
+  margin-bottom: 7px;
+}
+
+.label-why-points strong {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 3px;
+}
+
+.label-why-points small {
+  display: block;
+  font-size: 10px;
+  line-height: 1.45;
+  opacity: 0.58;
+}
+
+.label-why-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 13px;
+  font-size: 10px;
+  line-height: 1.45;
+  opacity: 0.5;
+}
+
+
+/* ================================
+   LABELSCOPE — AI SYNOPSIS
+================================ */
+
+.ai-synopsis {
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+
+.ai-synopsis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.ai-synopsis-title {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.ai-synopsis-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--accent-soft, rgba(99, 102, 241, 0.10));
+  color: var(--accent, #6366f1);
+}
+
+.ai-synopsis-title label {
+  display: block;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  opacity: 0.52;
+  margin-bottom: 3px;
+}
+
+.ai-synopsis-title h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.ai-badge {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: rgba(127, 127, 127, 0.08);
+  opacity: 0.65;
+}
+
+.ai-summary {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  opacity: 0.78;
+}
+
+.ai-highlights {
+  display: grid;
+  gap: 9px;
+  margin-top: 15px;
+}
+
+.ai-highlight {
+  display: flex;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 12px;
+  background: rgba(127, 127, 127, 0.055);
+}
+
+.ai-highlight > span {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.ai-highlight.positive > span {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.ai-highlight.attention > span {
+  background: rgba(234, 179, 8, 0.13);
+}
+
+.ai-highlight.ingredients > span {
+  background: rgba(99, 102, 241, 0.11);
+}
+
+.ai-highlight b {
+  display: block;
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.ai-highlight p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+  opacity: 0.65;
+}
+
+.ai-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(127, 127, 127, 0.12);
+  font-size: 10px;
+  line-height: 1.45;
+  opacity: 0.5;
+}
+
+.ai-loading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  opacity: 0.58;
+  padding: 8px 0;
+}
+
+.ai-loading-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: labelScopePulse 1.2s ease-in-out infinite;
+  background: currentColor;
+}
+
+.ai-error {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 11px;
+  line-height: 1.5;
+  opacity: 0.6;
+}
+
+@keyframes labelScopePulse {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* Mobile */
+@media (max-width: 700px) {
+  .label-why {
+    gap: 12px;
+  }
+
+  .label-why-points {
+    grid-template-columns: 1fr;
+  }
+
+  .label-why-points > div {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    column-gap: 8px;
+  }
+
+  .label-why-points span {
+    grid-row: span 2;
+    margin: 0;
+  }
+
+  .label-why-points strong {
+    margin: 0;
+  }
+
+  .ai-synopsis-header {
+    align-items: flex-start;
+  }
+
+  .ai-badge {
+    font-size: 8px;
+  }
+  }
