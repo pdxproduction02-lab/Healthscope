@@ -706,6 +706,7 @@ function App() {
   const [entries, setEntries] = useLocal('hs_entries', [])
   const [dark, setDark] = useLocal('hs_dark', false)
   const [chatOpen, setChatOpen] = useState(false)
+  const [pendingQuestion, setPendingQuestion] = useState('')
   const [toast, setToast] = useState('')
   const [labelData, setLabelData] = useState(null)
   const [reminders, setReminders] = useLocal('hs_reminders', [])
@@ -833,6 +834,7 @@ useEffect(() => {
         {page === 'learn' && (
   <Learn
     askTopic={(question) => {
+      setPendingQuestion(question);
       setChatOpen(true);
     }}
   />
@@ -869,7 +871,12 @@ useEffect(() => {
     </button>
   ))}
 </div>
- {chatOpen && <Chat close={() => setChatOpen(false)} />}
+ {chatOpen && (
+  <Chat
+    close={() => setChatOpen(false)}
+    initialQuestion={pendingQuestion}
+  />
+)}
 {toast && <div className="toast"><Check size={15} />{toast}</div>}
 </div>
 }
@@ -2123,7 +2130,7 @@ if (selectedTopic) {
 
 function Profile({ dark, setDark, clear }) { return <><Title k="PROFILE" h="Your data, under your control." p="No account is required for the demo. Keep everyday tracking local where practical." /><section className="profile"><div className="card pad"><div className="avatar"><UserRound size={25} /></div><h2>Guest profile</h2><p>Demo-ready, local-first experience.</p></div><div className="card pad settings"><div className="setting"><Moon size={17} /><span><b>Appearance</b><small>{dark ? 'Dark' : 'Light'} mode</small></span><button className="toggle" onClick={() => setDark(!dark)} aria-label="Toggle dark mode"><i className={dark ? 'on' : ''} /></button></div><div className="setting"><ShieldCheck size={17} /><span><b>Local-first storage</b><small>Wellness entries stay in this browser.</small></span></div><div className="privacy"><ShieldCheck size={17} /><span><b>Privacy principle</b><small>Only send information to AI services when needed. Disclose cloud processing in production.</small></span></div><button className="danger" onClick={clear}><Trash2 size={16} />Delete local demo data</button></div></section><Disclaimer /></> }
 
-function Chat({ close }) {
+function Chat({ close, initialQuestion }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
@@ -2132,6 +2139,11 @@ function Chat({ close }) {
   ]);
 
   const [question, setQuestion] = useState('');
+  useEffect(() => {
+  if (initialQuestion) {
+    setQuestion(initialQuestion);
+  }
+}, [initialQuestion]);
   const [loading, setLoading] = useState(false);
 
   const send = async () => {
