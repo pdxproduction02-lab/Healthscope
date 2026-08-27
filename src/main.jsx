@@ -360,6 +360,45 @@ const LEARN_TOPICS = [
     'What should I focus on during meditation?'
   ],
   special: 'meditation'
+  },
+  {
+  id: 'bmi',
+  icon: '🧮',
+  category: 'Body Metrics',
+  title: 'Understanding BMI',
+  summary:
+    'Learn what Body Mass Index measures, how the calculation works, and its important limitations.',
+  intro:
+    'Body Mass Index, commonly called BMI, is a mathematical value calculated using height and weight. It is often used as a screening measure, but it cannot provide a complete picture of an individual’s health.',
+  sections: [
+    {
+      heading: 'How is BMI calculated?',
+      text:
+        'BMI is calculated by dividing weight in kilograms by the square of height in meters. The calculation is straightforward, but the result is only one piece of information.'
+    },
+    {
+      heading: 'What does BMI measure?',
+      text:
+        'BMI is a mathematical relationship between height and weight. It is often used in public-health research and screening, but it does not directly measure body composition.'
+    },
+    {
+      heading: 'Why does context matter?',
+      text:
+        'BMI cannot distinguish between different body compositions and does not independently describe fitness, nutrition, or overall health. For children and teenagers, interpretation also depends on age and growth-related context.'
+    }
+  ],
+  fact:
+    'BMI is calculated from only two measurements: height and weight.',
+  myth:
+    'BMI alone can completely describe whether a person is healthy.',
+  truth:
+    'BMI is only one screening measure and should be understood alongside broader health and developmental context.',
+  aiQuestions: [
+    'How is BMI calculated?',
+    'What are the limitations of BMI?',
+    'Why is BMI interpreted differently for teenagers?'
+  ],
+  special: 'bmi'
   }
 ]
 
@@ -1995,6 +2034,158 @@ function MeditationTimer() {
     </section>
   );
       }
+function BMICalculator({ askTopic }) {
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState('');
+
+  const calculateBMI = (e) => {
+    e.preventDefault();
+
+    const heightCm = Number(height);
+    const weightKg = Number(weight);
+
+    if (
+      !heightCm ||
+      !weightKg ||
+      heightCm <= 0 ||
+      weightKg <= 0
+    ) {
+      setError('Please enter valid height and weight values.');
+      setResult(null);
+      return;
+    }
+
+    const heightMeters = heightCm / 100;
+    const bmi = weightKg / (heightMeters * heightMeters);
+
+    setResult(bmi.toFixed(1));
+    setError('');
+  };
+
+  const resetCalculator = () => {
+    setHeight('');
+    setWeight('');
+    setResult(null);
+    setError('');
+  };
+
+  return (
+    <section className="bmi-calculator">
+
+      <div className="bmi-header">
+        <div>
+          <label>BODY METRICS</label>
+          <h2>BMI Calculator</h2>
+          <p>
+            Calculate the mathematical Body Mass Index (BMI) value using height and weight.
+          </p>
+        </div>
+
+        <div className="bmi-icon">🧮</div>
+      </div>
+
+      <form
+        className="bmi-form"
+        onSubmit={calculateBMI}
+      >
+
+        <label>
+          Height
+          <div className="bmi-input-wrap">
+            <input
+              type="number"
+              inputMode="decimal"
+              min="1"
+              placeholder="Enter height"
+              value={height}
+              onChange={(e) => setHeight(e.target.value)}
+            />
+            <span>cm</span>
+          </div>
+        </label>
+
+        <label>
+          Weight
+          <div className="bmi-input-wrap">
+            <input
+              type="number"
+              inputMode="decimal"
+              min="1"
+              placeholder="Enter weight"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+            />
+            <span>kg</span>
+          </div>
+        </label>
+
+        <div className="bmi-actions">
+          <button
+            type="submit"
+            className="primary"
+          >
+            Calculate BMI
+          </button>
+
+          <button
+            type="button"
+            className="bmi-reset"
+            onClick={resetCalculator}
+          >
+            Reset
+          </button>
+        </div>
+
+      </form>
+
+      {error && (
+        <div className="bmi-error">
+          {error}
+        </div>
+      )}
+
+      {result && (
+        <div className="bmi-result">
+
+          <div className="bmi-result-label">
+            YOUR CALCULATED BMI
+          </div>
+
+          <strong>{result}</strong>
+
+          <p>
+            This is the mathematical result calculated from the height and weight values entered above.
+          </p>
+
+          <div className="bmi-formula">
+            BMI = weight (kg) ÷ height² (m)
+          </div>
+
+          <div className="bmi-important-note">
+            <b>Important:</b> BMI is a screening measure and does not directly measure overall health or body composition. For teenagers, interpreting BMI requires age- and growth-related context, so HealthScope does not provide a personal weight-status classification.
+          </div>
+
+          <button
+            type="button"
+            className="learn-ask bmi-ask"
+            onClick={() =>
+              askTopic?.(
+                `My calculated BMI is ${result}. Please explain what BMI measures and its limitations in a general educational way. Do not diagnose me or give me a personal weight classification.`
+              )
+            }
+          >
+            <MessageCircle size={16} />
+            Ask HealthScope about BMI
+          </button>
+
+        </div>
+      )}
+
+    </section>
+  );
+      }
 
 function Learn({ askTopic }) {
   const [search, setSearch] = useState('');
@@ -2082,6 +2273,9 @@ if (selectedTopic) {
           </section>
           {selectedTopic.special === 'meditation' && (
   <MeditationTimer />
+)}
+          {selectedTopic.special === 'bmi' && (
+  <BMICalculator askTopic={askTopic} />
 )}
 
           {selectedTopic.fact && (
