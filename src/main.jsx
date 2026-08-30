@@ -2641,6 +2641,7 @@ const labelInsightCategory =
           whether a food is right for an individual.
         </small>
             </div>
+        </section>
     </>
   );
 
