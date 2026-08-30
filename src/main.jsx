@@ -2634,16 +2634,17 @@ const labelInsightCategory =
 
                 </div>
 
-        <small>
+                <small>
           These are simple educational descriptions based
           on values detected from the scanned label. They
           are not a medical score and do not determine
           whether a food is right for an individual.
         </small>
-            </div>
-        </section>
+      </div>
+    </section>
     </>
   );
+}
 
 function MeditationTimer() {
   const durations = [1, 3, 5, 10];
