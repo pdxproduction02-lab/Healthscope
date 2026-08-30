@@ -3516,12 +3516,21 @@ function Chat({ close, initialQuestion }) {
     
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}))
 
-createRoot(document.getElementById('root')).render(
-  <>
-    <SplashScreen />
-    <App />
-  </>
-)
+function Root() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  return (
+    <>
+      <App />
+
+      {showSplash && (
+        <SplashScreen onFinish={() => setShowSplash(false)} />
+      )}
+    </>
+  );
+}
+
+createRoot(document.getElementById('root')).render(<Root />);
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
