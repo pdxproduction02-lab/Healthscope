@@ -2632,20 +2632,14 @@ const labelInsightCategory =
             Sodium <b>{sodiumSignal}</b>
           </span>
 
-        </div>
+                </div>
 
         <small>
           These are simple educational descriptions based
           on values detected from the scanned label. They
           are not a medical score and do not determine
           whether a food is right for an individual.
-                <small>
-          These are simple educational descriptions based
-          on values detected from the scanned label. They
-          are not a medical score and do not determine
-          whether a food is right for an individual.
         </small>
-
       </div>
     </>
   );
