@@ -8,18 +8,14 @@
   justify-content: center;
 
   background: #000;
-
   overflow: hidden;
 }
 
 .scan-square {
   position: relative;
-
   width: 120px;
   height: 120px;
-
   background: #fff;
-
   overflow: hidden;
 
   animation: squareAppear 0.45s ease-out forwards;
@@ -27,22 +23,6 @@
 
 .scan-line {
   position: absolute;
-.healthscope-splash.splash-leave {
-  animation: splashExit 0.8s ease forwards;
-  pointer-events: none;
-}
-
-@keyframes splashExit {
-  0% {
-    opacity: 1;
-    filter: blur(0);
-  }
-
-  100% {
-    opacity: 0;
-    filter: blur(18px);
-  }
-}
   left: 0;
   top: 50%;
 
@@ -57,12 +37,16 @@
     0.35s forwards;
 }
 
+.healthscope-splash.splash-leave {
+  animation: splashExit 0.8s ease forwards;
+  pointer-events: none;
+}
+
 @keyframes squareAppear {
   from {
     opacity: 0;
     transform: scale(0.88);
   }
-
   to {
     opacity: 1;
     transform: scale(1);
@@ -73,8 +57,18 @@
   from {
     transform: translateX(-100%) translateY(-50%);
   }
-
   to {
     transform: translateX(0) translateY(-50%);
+  }
+}
+
+@keyframes splashExit {
+  from {
+    opacity: 1;
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    filter: blur(18px);
   }
 }
