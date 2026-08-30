@@ -27,7 +27,22 @@
 
 .scan-line {
   position: absolute;
+.healthscope-splash.splash-leave {
+  animation: splashExit 0.8s ease forwards;
+  pointer-events: none;
+}
 
+@keyframes splashExit {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 0;
+    filter: blur(18px);
+  }
+}
   left: 0;
   top: 50%;
 
