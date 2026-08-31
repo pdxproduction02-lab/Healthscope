@@ -441,85 +441,14 @@ function useLocal(key, initial) {
 function Logo() {
   return (
     <div className="logo healthscope-logo">
-      <svg
-        viewBox="0 0 48 48"
-        width="22"
-        height="22"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient
-            id="healthscopeLogoGradient"
-            x1="12"
-            y1="4"
-            x2="36"
-            y2="44"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0%" stopColor="#39d353" />
-            <stop offset="100%" stopColor="#2388e8" />
-          </linearGradient>
-        </defs>
-
-        {/* Magnifying glass */}
-        <circle
-          cx="21"
-          cy="21"
-          r="13"
-          fill="none"
-          stroke="url(#healthscopeLogoGradient)"
-          strokeWidth="3.5"
-        />
-
-        {/* Handle */}
-        <path
-          d="M31 31 L41 41"
-          stroke="url(#healthscopeLogoGradient)"
-          strokeWidth="4"
-          strokeLinecap="round"
-        />
-
-        {/* Human figure */}
-        <circle
-          cx="21"
-          cy="16"
-          r="3"
-          fill="url(#healthscopeLogoGradient)"
-        />
-
-        <path
-          d="M21 20 L21 29"
-          stroke="url(#healthscopeLogoGradient)"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-
-        {/* Raised arms */}
-        <path
-          d="M21 22 L14 18"
-          stroke="url(#healthscopeLogoGradient)"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-
-        <path
-          d="M21 22 L28 18"
-          stroke="url(#healthscopeLogoGradient)"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-
-        {/* Growing leaf */}
-        <path
-          d="M24 29
-             C29 27, 31 23, 30 20
-             C26 20, 23 23, 24 29Z"
-          fill="url(#healthscopeLogoGradient)"
-        />
-      </svg>
+      <img
+        src="/healthscope-icon-192.png"
+        alt="HealthScope"
+      />
     </div>
-  )
+  );
 }
+
 function Brand() { return <div className="brand"><Logo /><div><b>HealthScope</b><small>Understand. Track. Stay Informed.</small></div></div> }
 function Reminders({
   reminders,
