@@ -1,285 +1,257 @@
-/* =========================================
-   HEALTHSCOPE — MAGNIFYING GLASS INTRO
-   Matches the HealthScope design system
-========================================= */
+/* =========================================================
+   HEALTHSCOPE — CINEMATIC SPLASH SCREEN
+   ========================================================= */
 
-.healthscope-splash {
+.hs-splash {
   position: fixed;
   inset: 0;
   z-index: 9999;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
 
   overflow: hidden;
 
-  /* HealthScope theme */
-  background:
-    radial-gradient(
-      circle at 50% 42%,
-      #ffffff 0%,
-      #edf4f2 48%,
-      #dfe9e6 100%
-    );
+  background: #f5f8f7;
 
-  color: #10252d;
-}
-
-/* =========================================
-   ATMOSPHERIC BACKGROUND
-========================================= */
-
-.splash-orbit {
-  position: absolute;
-
-  border-radius: 50%;
-
-  border: 1px solid rgba(35, 183, 163, 0.10);
-
-  pointer-events: none;
-}
-
-.splash-orbit-one {
-  width: 46vmax;
-  height: 46vmax;
-
-  animation: orbitPulse 5s ease-in-out infinite;
-}
-
-.splash-orbit-two {
-  width: 70vmax;
-  height: 70vmax;
-
-  animation: orbitPulse 7s ease-in-out infinite reverse;
-}
-
-/* =========================================
-   SCOPE STAGE
-========================================= */
-
-.scope-stage {
-  position: relative;
-  z-index: 2;
-
-  animation:
-    scopeEnter 0.8s
-    cubic-bezier(0.16, 1, 0.3, 1)
+  animation: hsSplashExit 1.15s cubic-bezier(.76, 0, .24, 1) 4.55s
     forwards;
 }
 
-.scope-glass {
-  position: relative;
 
-  width: 150px;
-  height: 185px;
-}
+/* ---------------------------------------------------------
+   SOFT BACKGROUND ATMOSPHERE
+   --------------------------------------------------------- */
 
-/* =========================================
-   MAGNIFYING LENS
-========================================= */
-
-.scope-lens {
-  position: relative;
-
-  width: 150px;
-  height: 150px;
-
-  border-radius: 50%;
-
-  border: 2px solid rgba(11, 31, 42, 0.78);
-
-  overflow: hidden;
+.hs-atmosphere {
+  position: absolute;
+  inset: -25%;
 
   background:
     radial-gradient(
-      circle at 35% 28%,
-      rgba(255,255,255,0.98),
-      rgba(237,244,242,0.85) 55%,
-      rgba(223,233,230,0.62)
+      circle at 50% 45%,
+      rgba(35, 183, 163, 0.13),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(20, 145, 220, 0.08),
+      transparent 42%
+    );
+
+  filter: blur(35px);
+
+  opacity: 0;
+
+  animation:
+    hsAtmosphereIn 1.6s ease-out 0.15s forwards,
+    hsAtmospherePulse 3.2s ease-in-out 1.7s infinite;
+}
+
+
+/* ---------------------------------------------------------
+   LOGO STAGE
+   --------------------------------------------------------- */
+
+.hs-logo-stage {
+  position: relative;
+
+  width: min(78vw, 520px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+
+  transform:
+    scale(.88)
+    translateY(12px);
+
+  filter: blur(12px);
+
+  animation:
+    hsLogoReveal 1.35s cubic-bezier(.16, 1, .3, 1) .55s forwards,
+    hsLogoSettle 1s ease-out 3.35s forwards;
+}
+
+
+/* ---------------------------------------------------------
+   ACTUAL HEALTHSCOPE LOGO
+   --------------------------------------------------------- */
+
+.hs-logo {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  position: relative;
+  z-index: 2;
+
+  user-select: none;
+  -webkit-user-drag: none;
+
+  /* Extremely subtle cinematic depth */
+  filter:
+    drop-shadow(0 14px 35px rgba(18, 80, 85, 0.10));
+
+  animation:
+    hsLogoGlow 1.5s ease-out 2.35s forwards;
+}
+
+
+/* ---------------------------------------------------------
+   OPTICAL SCANNING BEAM
+   --------------------------------------------------------- */
+
+.hs-scan-beam {
+  position: absolute;
+
+  z-index: 5;
+
+  top: -8%;
+  bottom: -8%;
+
+  left: 0;
+
+  width: 3px;
+
+  pointer-events: none;
+
+  opacity: 0;
+
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(35, 183, 163, 0.15) 12%,
+      #23b7a3 38%,
+      #27d5ba 50%,
+      #1499df 62%,
+      rgba(20, 153, 223, 0.12) 88%,
+      transparent 100%
     );
 
   box-shadow:
-    0 0 0 7px rgba(35,183,163,0.045),
-    0 25px 70px rgba(18,44,49,0.12),
-    inset 0 0 35px rgba(255,255,255,0.7);
+    0 0 7px rgba(35, 183, 163, 0.75),
+    0 0 20px rgba(35, 183, 163, 0.42),
+    0 0 42px rgba(20, 153, 223, 0.20);
 
-  backdrop-filter: blur(8px);
+  animation:
+    hsScan 2s cubic-bezier(.55, .05, .25, .95) 1.55s forwards;
 }
 
-/* =========================================
-   MAGNIFYING GLASS HANDLE
-========================================= */
 
-.scope-handle {
+/* Wider glow surrounding the scanner */
+
+.hs-scan-beam::before {
+  content: "";
+
   position: absolute;
 
+  top: 0;
+  bottom: 0;
+
+  left: 50%;
+
   width: 70px;
-  height: 12px;
 
-  right: -43px;
-  bottom: 8px;
-
-  border-radius: 10px;
+  transform: translateX(-50%);
 
   background:
     linear-gradient(
       90deg,
-      #0b1f2a,
-      #23b7a3
+      transparent,
+      rgba(35, 183, 163, 0.07),
+      rgba(35, 183, 163, 0.14),
+      rgba(20, 153, 223, 0.07),
+      transparent
     );
 
-  transform:
-    rotate(45deg)
-    scaleX(0);
+  filter: blur(8px);
+}
 
-  transform-origin: left center;
 
-  animation:
-    handleDraw 0.55s
-    cubic-bezier(0.16, 1, 0.3, 1)
-    0.55s forwards;
+/* Bright scanner core */
+
+.hs-scan-beam span {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 7px;
+  height: 7px;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: #ffffff;
 
   box-shadow:
-    0 6px 18px rgba(18,44,49,0.18);
+    0 0 5px #ffffff,
+    0 0 14px #23b7a3,
+    0 0 28px #1499df;
 }
 
-/* =========================================
-   LENS GRID
-========================================= */
 
-.lens-grid {
+/* ---------------------------------------------------------
+   LIGHT SWEEP
+   --------------------------------------------------------- */
+
+.hs-light-sweep {
   position: absolute;
 
-  inset: 0;
+  z-index: 4;
 
-  background-image:
-    linear-gradient(
-      rgba(35,183,163,0.07) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(35,183,163,0.07) 1px,
-      transparent 1px
-    );
+  inset: -20%;
 
-  background-size: 22px 22px;
-
-  opacity: 0.65;
-}
-
-/* =========================================
-   HEALTH DATA
-========================================= */
-
-.health-data {
-  position: absolute;
-
-  inset: 20px;
+  pointer-events: none;
 
   opacity: 0;
 
-  transform: translateY(8px);
+  background:
+    linear-gradient(
+      105deg,
+      transparent 35%,
+      rgba(255, 255, 255, 0.02) 42%,
+      rgba(255, 255, 255, 0.38) 50%,
+      rgba(255, 255, 255, 0.02) 58%,
+      transparent 65%
+    );
 
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
-}
-
-.phase-scanning .health-data,
-.phase-lock .health-data,
-.phase-reveal .health-data {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* =========================================
-   PULSE BARS
-========================================= */
-
-.data-pulse {
-  position: absolute;
-
-  top: 32px;
-  left: 8px;
-  right: 8px;
-
-  height: 30px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  gap: 3px;
-}
-
-.data-pulse span {
-  width: 4px;
-
-  border-radius: 3px;
-
-  background: rgba(35,183,163,0.85);
+  transform: translateX(-110%);
 
   animation:
-    pulseBars 1.2s
-    ease-in-out
-    infinite;
+    hsLightSweep 1.25s cubic-bezier(.4, 0, .2, 1) 2.55s forwards;
 }
 
-.data-pulse span:nth-child(1) {
-  height: 8px;
-}
 
-.data-pulse span:nth-child(2) {
-  height: 15px;
-  animation-delay: .1s;
-}
+/* ---------------------------------------------------------
+   LOADING DOTS
+   --------------------------------------------------------- */
 
-.data-pulse span:nth-child(3) {
-  height: 24px;
-  animation-delay: .2s;
-}
-
-.data-pulse span:nth-child(4) {
-  height: 11px;
-  animation-delay: .3s;
-}
-
-.data-pulse span:nth-child(5) {
-  height: 20px;
-  animation-delay: .4s;
-}
-
-.data-pulse span:nth-child(6) {
-  height: 10px;
-  animation-delay: .5s;
-}
-
-.data-pulse span:nth-child(7) {
-  height: 16px;
-  animation-delay: .6s;
-}
-
-/* =========================================
-   DATA DOTS
-========================================= */
-
-.data-dots {
+.hs-loading {
   position: absolute;
 
-  bottom: 28px;
-  left: 16px;
-  right: 16px;
+  left: 50%;
+  bottom: 8.5%;
+
+  transform: translateX(-50%);
 
   display: flex;
+  gap: 6px;
 
-  justify-content: space-between;
+  opacity: 0;
+
+  animation:
+    hsLoadingIn .7s ease-out 3.15s forwards,
+    hsLoadingOut .45s ease-in 4.05s forwards;
 }
 
-.data-dots i {
+.hs-loading span {
   width: 5px;
   height: 5px;
 
@@ -287,538 +259,291 @@
 
   background: #23b7a3;
 
-  box-shadow:
-    0 0 10px rgba(35,183,163,0.7);
-
-  animation:
-    dataBlink 1.4s
-    ease-in-out
-    infinite;
+  animation: hsDot 1s ease-in-out infinite;
 }
 
-.data-dots i:nth-child(2) {
-  animation-delay: .15s;
+.hs-loading span:nth-child(2) {
+  animation-delay: .12s;
 }
 
-.data-dots i:nth-child(3) {
-  animation-delay: .3s;
+.hs-loading span:nth-child(3) {
+  animation-delay: .24s;
 }
 
-.data-dots i:nth-child(4) {
-  animation-delay: .45s;
-}
 
-.data-dots i:nth-child(5) {
-  animation-delay: .6s;
-}
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
 
-.data-dots i:nth-child(6) {
-  animation-delay: .75s;
-}
 
-/* =========================================
-   DATA BARS
-========================================= */
+/* Background */
 
-.data-bars {
-  position: absolute;
-
-  top: 78px;
-  left: 24px;
-  right: 24px;
-
-  height: 26px;
-
-  display: flex;
-
-  align-items: flex-end;
-  justify-content: space-between;
-}
-
-.data-bars b {
-  width: 8px;
-
-  border-radius: 4px;
-
-  background:
-    rgba(11,31,42,0.32);
-}
-
-.data-bars b:nth-child(1) {
-  height: 35%;
-}
-
-.data-bars b:nth-child(2) {
-  height: 80%;
-}
-
-.data-bars b:nth-child(3) {
-  height: 55%;
-}
-
-.data-bars b:nth-child(4) {
-  height: 100%;
-}
-
-/* =========================================
-   SCAN TRAIL
-========================================= */
-
-.scan-trail {
-  position: absolute;
-
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 0%;
-
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(35,183,163,0.16),
-      rgba(35,183,163,0.025)
-    );
-
-  opacity: 0;
-}
-
-.phase-scanning .scan-trail {
-  opacity: 1;
-
-  animation:
-    scanTrail 1.45s
-    cubic-bezier(0.65,0,0.35,1)
-    forwards;
-}
-
-/* =========================================
-   SCANNING BEAM
-========================================= */
-
-.scan-beam {
-  position: absolute;
-
-  left: 0;
-
-  top: -4px;
-
-  width: 100%;
-  height: 2px;
-
-  background: #23b7a3;
-
-  box-shadow:
-    0 0 10px #23b7a3,
-    0 0 28px rgba(35,183,163,0.75),
-    0 0 55px rgba(35,183,163,0.28);
-}
-
-.phase-scanning .scan-beam {
-  animation:
-    scanLens 1.45s
-    cubic-bezier(0.65,0,0.35,1)
-    forwards;
-}
-
-.phase-lock .scan-beam {
-  animation:
-    returnToCenter 0.45s
-    cubic-bezier(0.34,1.56,0.64,1)
-    forwards;
-}
-
-/* =========================================
-   GLASS SHINE
-========================================= */
-
-.lens-shine {
-  position: absolute;
-
-  width: 70px;
-  height: 160px;
-
-  top: -30px;
-  left: -70px;
-
-  transform:
-    rotate(25deg);
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(255,255,255,0.6),
-      transparent
-    );
-
-  animation:
-    lensShine 2.5s
-    ease-in-out
-    infinite;
-}
-
-/* =========================================
-   BRAND
-========================================= */
-
-.scope-brand {
-  position: relative;
-
-  z-index: 2;
-
-  margin-top: 25px;
-
-  display: flex;
-
-  flex-direction: column;
-  align-items: center;
-
-  opacity: 0;
-
-  transform: translateY(14px);
-
-  animation:
-    brandEnter .7s
-    cubic-bezier(.16,1,.3,1)
-    1.5s
-    forwards;
-}
-
-.scope-name {
-  font-size: 15px;
-
-  font-weight: 800;
-
-  letter-spacing: .28em;
-
-  margin-left: .28em;
-
-  color: #10252d;
-}
-
-.scope-tagline {
-  margin-top: 8px;
-
-  font-size: 7px;
-
-  letter-spacing: .16em;
-
-  color: #718188;
-
-  opacity: .9;
-}
-
-/* =========================================
-   LOCK EFFECT
-========================================= */
-
-.phase-lock .scope-lens {
-  animation:
-    insightPulse .55s
-    ease
-    forwards;
-}
-
-/* =========================================
-   CINEMATIC REVEAL
-========================================= */
-
-.phase-reveal {
-  animation:
-    scopeReveal 1.6s
-    cubic-bezier(.76,0,.24,1)
-    forwards;
-}
-
-.phase-reveal .scope-glass {
-  animation:
-    lensExpand 1.6s
-    cubic-bezier(.76,0,.24,1)
-    forwards;
-}
-
-/* =========================================
-   KEYFRAMES
-========================================= */
-
-@keyframes scopeEnter {
+@keyframes hsAtmosphereIn {
   from {
     opacity: 0;
-
-    transform:
-      scale(.75)
-      translateY(18px);
+    transform: scale(.85);
   }
 
   to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes hsAtmospherePulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+
+/* Logo entrance */
+
+@keyframes hsLogoReveal {
+  0% {
+    opacity: 0;
+
+    transform:
+      scale(.82)
+      translateY(18px);
+
+    filter: blur(18px);
+  }
+
+  55% {
+    opacity: 1;
+
+    transform:
+      scale(1.025)
+      translateY(-2px);
+
+    filter: blur(1px);
+  }
+
+  100% {
     opacity: 1;
 
     transform:
       scale(1)
       translateY(0);
+
+    filter: blur(0);
   }
 }
 
-@keyframes handleDraw {
-  to {
-    transform:
-      rotate(45deg)
-      scaleX(1);
-  }
-}
 
-@keyframes scanLens {
+/* Tiny final movement */
+
+@keyframes hsLogoSettle {
   from {
-    top: 0%;
+    transform: scale(1);
   }
 
   to {
-    top: 98%;
+    transform: scale(1.012);
   }
 }
 
-@keyframes scanTrail {
-  from {
-    height: 0%;
-  }
 
-  to {
-    height: 100%;
-  }
-}
+/* Logo glow */
 
-@keyframes returnToCenter {
-  from {
-    top: 98%;
-  }
-
-  to {
-    top: 50%;
-  }
-}
-
-@keyframes insightPulse {
+@keyframes hsLogoGlow {
   0% {
-    transform: scale(1);
+    filter:
+      drop-shadow(0 14px 35px rgba(18, 80, 85, 0.10));
   }
 
-  50% {
-    transform: scale(1.04);
-
-    box-shadow:
-      0 0 0 10px rgba(35,183,163,.05),
-      0 0 45px rgba(35,183,163,.25);
+  45% {
+    filter:
+      drop-shadow(0 0 18px rgba(35, 183, 163, 0.20))
+      drop-shadow(0 18px 45px rgba(20, 153, 223, 0.12));
   }
 
   100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes lensExpand {
-  from {
-    transform: scale(1);
-  }
-
-  to {
-    transform: scale(13);
-  }
-}
-
-@keyframes scopeReveal {
-  from {
-    opacity: 1;
-
     filter:
-      blur(0);
-  }
-
-  to {
-    opacity: 0;
-
-    filter:
-      blur(18px);
+      drop-shadow(0 14px 35px rgba(18, 80, 85, 0.10));
   }
 }
 
-@keyframes brandEnter {
-  from {
-    opacity: 0;
 
-    transform:
-      translateY(14px);
+/* Scanner */
+
+@keyframes hsScan {
+  0% {
+    left: -4%;
+    opacity: 0;
   }
 
-  to {
+  8% {
     opacity: 1;
-
-    transform:
-      translateY(0);
   }
-}
 
-@keyframes orbitPulse {
-  0%,
+  48% {
+    opacity: 1;
+  }
+
+  88% {
+    opacity: 1;
+  }
+
   100% {
-    transform: scale(1);
+    left: 104%;
+    opacity: 0;
+  }
+}
 
-    opacity: .4;
+
+/* Light sweep */
+
+@keyframes hsLightSweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-110%);
   }
 
-  50% {
-    transform: scale(1.08);
+  15% {
+    opacity: 1;
+  }
 
+  75% {
     opacity: .8;
   }
-}
 
-@keyframes pulseBars {
-  0%,
   100% {
-    transform: scaleY(.6);
-  }
-
-  50% {
-    transform: scaleY(1);
+    opacity: 0;
+    transform: translateX(110%);
   }
 }
 
-@keyframes dataBlink {
+
+/* Loading */
+
+@keyframes hsLoadingIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(5px);
+  }
+
+  to {
+    opacity: .8;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes hsLoadingOut {
+  from {
+    opacity: .8;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes hsDot {
   0%,
   100% {
-    opacity: .25;
+    transform: translateY(0);
+    opacity: .35;
   }
 
   50% {
+    transform: translateY(-3px);
     opacity: 1;
   }
 }
 
-@keyframes lensShine {
+
+/* ---------------------------------------------------------
+   CINEMATIC EXIT
+   --------------------------------------------------------- */
+
+@keyframes hsSplashExit {
   0% {
-    transform:
-      translateX(0)
-      rotate(25deg);
+    opacity: 1;
+
+    filter: blur(0);
+
+    transform: scale(1);
+  }
+
+  45% {
+    opacity: 1;
+
+    filter: blur(4px);
+
+    transform: scale(1.012);
   }
 
   100% {
-    transform:
-      translateX(260px)
-      rotate(25deg);
+    opacity: 0;
+
+    filter: blur(16px);
+
+    transform: scale(1.035);
+
+    visibility: hidden;
   }
 }
 
-/* =========================================
-   REDUCED MOTION
-========================================= */
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 600px) {
+
+  .hs-logo-stage {
+    width: min(88vw, 440px);
+  }
+
+  .hs-loading {
+    bottom: 10%;
+  }
+
+  .hs-scan-beam {
+    width: 2px;
+  }
+
+  .hs-scan-beam::before {
+    width: 52px;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   ACCESSIBILITY
+   --------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
 
-  .healthscope-splash,
-  .healthscope-splash * {
-    animation-duration: 0.01ms !important;
-    animation-delay: 0ms !important;
+  .hs-splash,
+  .hs-atmosphere,
+  .hs-logo-stage,
+  .hs-logo,
+  .hs-scan-beam,
+  .hs-light-sweep,
+  .hs-loading,
+  .hs-loading span {
+    animation: none !important;
   }
 
-}
-/* =========================================
-   DARK MODE — HEALTHSCOPE INTRO
-========================================= */
+  .hs-logo-stage {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
 
-html[data-theme="dark"] .healthscope-splash {
-  background:
-    radial-gradient(
-      circle at 50% 42%,
-      #162b31 0%,
-      #102128 52%,
-      #09151a 100%
-    );
+  .hs-atmosphere {
+    opacity: 1;
+  }
 
-  color: #edf7f5;
-}
-
-/* Atmospheric circles */
-
-html[data-theme="dark"] .splash-orbit {
-  border-color:
-    rgba(35,183,163,0.13);
-}
-
-/* Magnifying lens */
-
-html[data-theme="dark"] .scope-lens {
-  border-color:
-    rgba(234,248,245,0.72);
-
-  background:
-    radial-gradient(
-      circle at 35% 28%,
-      rgba(22,43,49,0.95),
-      rgba(16,33,40,0.88) 55%,
-      rgba(9,21,26,0.75)
-    );
-
-  box-shadow:
-    0 0 0 7px rgba(35,183,163,0.06),
-    0 25px 70px rgba(0,0,0,0.38),
-    inset 0 0 35px rgba(255,255,255,0.035);
-}
-
-/* Handle */
-
-html[data-theme="dark"] .scope-handle {
-  background:
-    linear-gradient(
-      90deg,
-      #eaf8f5,
-      #23b7a3
-    );
-
-  box-shadow:
-    0 6px 18px rgba(0,0,0,0.32);
-}
-
-/* Lens grid */
-
-html[data-theme="dark"] .lens-grid {
-  background-image:
-    linear-gradient(
-      rgba(35,183,163,0.09) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(35,183,163,0.09) 1px,
-      transparent 1px
-    );
-}
-
-/* Data bars */
-
-html[data-theme="dark"] .data-bars b {
-  background:
-    rgba(234,248,245,0.38);
-}
-
-/* Brand */
-
-html[data-theme="dark"] .scope-name {
-  color: #edf7f5;
-}
-
-html[data-theme="dark"] .scope-tagline {
-  color: #9aafb2;
-}
-
-/* Lens shine */
-
-html[data-theme="dark"] .lens-shine {
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(234,248,245,0.12),
-      transparent
-    );
+  .hs-splash {
+    animation: hsSplashExit .5s ease 1.5s forwards !important;
+  }
 }
