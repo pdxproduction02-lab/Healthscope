@@ -5,7 +5,6 @@ export default function SplashScreen() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    // Keep the cinematic intro alive for the full sequence.
     const timer = setTimeout(() => {
       setVisible(false);
     }, 5400);
@@ -18,30 +17,36 @@ export default function SplashScreen() {
   return (
     <div className="hs-splash">
 
-      {/* Soft cinematic background atmosphere */}
       <div className="hs-atmosphere" />
 
-      {/* Main logo reveal */}
       <div className="hs-logo-stage">
 
-        {/* Actual HealthScope logo */}
+        {/* Faint silhouette — logo exists before the scan */}
         <img
           src="/healthscope-logo-transparent.png"
-          alt="HealthScope"
-          className="hs-logo"
+          alt=""
+          className="hs-logo hs-logo-base"
         />
 
-        {/* Optical scanning light */}
+        {/* This copy is progressively revealed by the scanner */}
+        <div className="hs-logo-reveal">
+          <img
+            src="/healthscope-logo-transparent.png"
+            alt="HealthScope"
+            className="hs-logo hs-logo-revealed"
+          />
+        </div>
+
+        {/* Scanning beam */}
         <div className="hs-scan-beam">
           <span />
         </div>
 
-        {/* Subtle light sweep */}
+        {/* Cinematic light sweep */}
         <div className="hs-light-sweep" />
 
       </div>
 
-      {/* Tiny launch indicator */}
       <div className="hs-loading">
         <span />
         <span />
