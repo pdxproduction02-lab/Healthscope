@@ -3330,3 +3330,19 @@
   display: block;
   flex-shrink: 0;
 }
+/* =========================================
+   HEALTHSCOPE BRAND LOGO
+========================================= */
+
+.healthscope-logo {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.healthscope-logo img {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  display: block;
+}
