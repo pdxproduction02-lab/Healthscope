@@ -722,3 +722,103 @@
   }
 
 }
+/* =========================================
+   DARK MODE — HEALTHSCOPE INTRO
+========================================= */
+
+html[data-theme="dark"] .healthscope-splash {
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      #162b31 0%,
+      #102128 52%,
+      #09151a 100%
+    );
+
+  color: #edf7f5;
+}
+
+/* Atmospheric circles */
+
+html[data-theme="dark"] .splash-orbit {
+  border-color:
+    rgba(35,183,163,0.13);
+}
+
+/* Magnifying lens */
+
+html[data-theme="dark"] .scope-lens {
+  border-color:
+    rgba(234,248,245,0.72);
+
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      rgba(22,43,49,0.95),
+      rgba(16,33,40,0.88) 55%,
+      rgba(9,21,26,0.75)
+    );
+
+  box-shadow:
+    0 0 0 7px rgba(35,183,163,0.06),
+    0 25px 70px rgba(0,0,0,0.38),
+    inset 0 0 35px rgba(255,255,255,0.035);
+}
+
+/* Handle */
+
+html[data-theme="dark"] .scope-handle {
+  background:
+    linear-gradient(
+      90deg,
+      #eaf8f5,
+      #23b7a3
+    );
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.32);
+}
+
+/* Lens grid */
+
+html[data-theme="dark"] .lens-grid {
+  background-image:
+    linear-gradient(
+      rgba(35,183,163,0.09) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(35,183,163,0.09) 1px,
+      transparent 1px
+    );
+}
+
+/* Data bars */
+
+html[data-theme="dark"] .data-bars b {
+  background:
+    rgba(234,248,245,0.38);
+}
+
+/* Brand */
+
+html[data-theme="dark"] .scope-name {
+  color: #edf7f5;
+}
+
+html[data-theme="dark"] .scope-tagline {
+  color: #9aafb2;
+}
+
+/* Lens shine */
+
+html[data-theme="dark"] .lens-shine {
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(234,248,245,0.12),
+      transparent
+    );
+}
