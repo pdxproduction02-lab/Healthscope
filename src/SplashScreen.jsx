@@ -1,73 +1,53 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./SplashScreen.css";
 
-export default function SplashScreen({ onFinish }) {
-  const [phase, setPhase] = useState("intro");
+export default function SplashScreen() {
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const timers = [
-      setTimeout(() => setPhase("scanning"), 700),
-      setTimeout(() => setPhase("lock"), 2300),
-      setTimeout(() => setPhase("reveal"), 3100),
-      setTimeout(() => onFinish(), 4700),
-    ];
+    // Keep the cinematic intro alive for the full sequence.
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, 5400);
 
-    return () => timers.forEach(clearTimeout);
-  }, [onFinish]);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!visible) return null;
 
   return (
-    <div className={`healthscope-splash phase-${phase}`}>
-      <div className="splash-orbit splash-orbit-one" />
-      <div className="splash-orbit splash-orbit-two" />
+    <div className="hs-splash">
 
-      <div className="scope-stage">
-        <div className="scope-glass">
-          <div className="scope-lens">
-            <div className="lens-grid" />
+      {/* Soft cinematic background atmosphere */}
+      <div className="hs-atmosphere" />
 
-            <div className="health-data">
-              <div className="data-pulse">
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-              </div>
+      {/* Main logo reveal */}
+      <div className="hs-logo-stage">
 
-              <div className="data-dots">
-                <i />
-                <i />
-                <i />
-                <i />
-                <i />
-                <i />
-              </div>
+        {/* Actual HealthScope logo */}
+        <img
+          src="/healthscope-logo-transparent.png"
+          alt="HealthScope"
+          className="hs-logo"
+        />
 
-              <div className="data-bars">
-                <b />
-                <b />
-                <b />
-                <b />
-              </div>
-            </div>
-
-            <div className="scan-trail" />
-            <div className="scan-beam" />
-            <div className="lens-shine" />
-          </div>
-
-          <div className="scope-handle" />
+        {/* Optical scanning light */}
+        <div className="hs-scan-beam">
+          <span />
         </div>
+
+        {/* Subtle light sweep */}
+        <div className="hs-light-sweep" />
+
       </div>
 
-      <div className="scope-brand">
-        <div className="scope-name">HEALTHSCOPE</div>
-        <div className="scope-tagline">
-          UNDERSTAND · TRACK · STAY INFORMED
-        </div>
+      {/* Tiny launch indicator */}
+      <div className="hs-loading">
+        <span />
+        <span />
+        <span />
       </div>
+
     </div>
   );
 }
