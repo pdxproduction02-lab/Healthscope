@@ -3346,3 +3346,16 @@
   object-fit: contain;
   display: block;
 }
+/* HealthScope official logo */
+.healthscope-logo {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.healthscope-logo img {
+  width: 27px;
+  height: 27px;
+  object-fit: contain;
+  display: block;
+}
