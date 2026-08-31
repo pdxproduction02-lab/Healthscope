@@ -442,7 +442,7 @@ function Logo() {
   return (
     <div className="logo healthscope-logo">
       <img
-        src="/healthscope-icon-192.png"
+        src="/healthscope-icon-transparent.png"
         alt="HealthScope"
       />
     </div>
