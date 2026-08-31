@@ -1,5 +1,5 @@
 /* =========================================================
-   HEALTHSCOPE — CINEMATIC SPLASH SCREEN
+   HEALTHSCOPE — CINEMATIC LOGO SCAN
    ========================================================= */
 
 .hs-splash {
@@ -14,14 +14,14 @@
 
   background: #f5f8f7;
 
-  animation: hsSplashExit 1.15s cubic-bezier(.76, 0, .24, 1) 4.55s
-    forwards;
+  animation:
+    hsSplashExit 1.15s cubic-bezier(.76, 0, .24, 1) 4.55s forwards;
 }
 
 
-/* ---------------------------------------------------------
-   SOFT BACKGROUND ATMOSPHERE
-   --------------------------------------------------------- */
+/* =========================================================
+   BACKGROUND ATMOSPHERE
+   ========================================================= */
 
 .hs-atmosphere {
   position: absolute;
@@ -30,28 +30,28 @@
   background:
     radial-gradient(
       circle at 50% 45%,
-      rgba(35, 183, 163, 0.13),
-      transparent 25%
+      rgba(35, 183, 163, .14),
+      transparent 24%
     ),
     radial-gradient(
-      circle at 50% 50%,
-      rgba(20, 145, 220, 0.08),
-      transparent 42%
+      circle at 50% 52%,
+      rgba(20, 153, 223, .09),
+      transparent 43%
     );
 
-  filter: blur(35px);
+  filter: blur(38px);
 
   opacity: 0;
 
   animation:
-    hsAtmosphereIn 1.6s ease-out 0.15s forwards,
-    hsAtmospherePulse 3.2s ease-in-out 1.7s infinite;
+    hsAtmosphereIn 1.4s ease-out .1s forwards,
+    hsAtmospherePulse 4s ease-in-out 1.6s infinite;
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    LOGO STAGE
-   --------------------------------------------------------- */
+   ========================================================= */
 
 .hs-logo-stage {
   position: relative;
@@ -66,19 +66,18 @@
 
   transform:
     scale(.88)
-    translateY(12px);
+    translateY(14px);
 
-  filter: blur(12px);
+  filter: blur(10px);
 
   animation:
-    hsLogoReveal 1.35s cubic-bezier(.16, 1, .3, 1) .55s forwards,
-    hsLogoSettle 1s ease-out 3.35s forwards;
+    hsLogoStageIn 1.35s cubic-bezier(.16, 1, .3, 1) .45s forwards;
 }
 
 
-/* ---------------------------------------------------------
-   ACTUAL HEALTHSCOPE LOGO
-   --------------------------------------------------------- */
+/* =========================================================
+   LOGO
+   ========================================================= */
 
 .hs-logo {
   display: block;
@@ -86,24 +85,66 @@
   width: 100%;
   height: auto;
 
-  position: relative;
-  z-index: 2;
-
   user-select: none;
   -webkit-user-drag: none;
-
-  /* Extremely subtle cinematic depth */
-  filter:
-    drop-shadow(0 14px 35px rgba(18, 80, 85, 0.10));
-
-  animation:
-    hsLogoGlow 1.5s ease-out 2.35s forwards;
 }
 
 
 /* ---------------------------------------------------------
-   OPTICAL SCANNING BEAM
+   FAINT INITIAL SILHOUETTE
    --------------------------------------------------------- */
+
+.hs-logo-base {
+  position: relative;
+  z-index: 1;
+
+  opacity: .055;
+
+  filter:
+    grayscale(1)
+    brightness(.85)
+    blur(.4px);
+}
+
+
+/* ---------------------------------------------------------
+   REVEAL LAYER
+   --------------------------------------------------------- */
+
+.hs-logo-reveal {
+  position: absolute;
+
+  z-index: 2;
+
+  inset: 0;
+
+  overflow: hidden;
+
+  /* Starts with practically nothing visible */
+  clip-path: inset(0 100% 0 0);
+
+  animation:
+    hsLogoScanReveal 2.15s
+    cubic-bezier(.55, .05, .2, .95)
+    1.35s forwards;
+}
+
+
+.hs-logo-revealed {
+  position: absolute;
+
+  inset: 0;
+
+  opacity: 1;
+
+  filter:
+    drop-shadow(0 14px 35px rgba(18, 80, 85, .10));
+}
+
+
+/* =========================================================
+   SCANNING BEAM
+   ========================================================= */
 
 .hs-scan-beam {
   position: absolute;
@@ -113,7 +154,7 @@
   top: -8%;
   bottom: -8%;
 
-  left: 0;
+  left: -5%;
 
   width: 3px;
 
@@ -125,25 +166,27 @@
     linear-gradient(
       to bottom,
       transparent 0%,
-      rgba(35, 183, 163, 0.15) 12%,
-      #23b7a3 38%,
-      #27d5ba 50%,
-      #1499df 62%,
-      rgba(20, 153, 223, 0.12) 88%,
+      rgba(35,183,163,.08) 10%,
+      #23b7a3 34%,
+      #28d8bb 50%,
+      #1499df 66%,
+      rgba(20,153,223,.08) 90%,
       transparent 100%
     );
 
   box-shadow:
-    0 0 7px rgba(35, 183, 163, 0.75),
-    0 0 20px rgba(35, 183, 163, 0.42),
-    0 0 42px rgba(20, 153, 223, 0.20);
+    0 0 7px rgba(35,183,163,.8),
+    0 0 20px rgba(35,183,163,.45),
+    0 0 45px rgba(20,153,223,.25);
 
   animation:
-    hsScan 2s cubic-bezier(.55, .05, .25, .95) 1.55s forwards;
+    hsScan 2.15s
+    cubic-bezier(.55, .05, .2, .95)
+    1.35s forwards;
 }
 
 
-/* Wider glow surrounding the scanner */
+/* Scanner glow */
 
 .hs-scan-beam::before {
   content: "";
@@ -155,7 +198,7 @@
 
   left: 50%;
 
-  width: 70px;
+  width: 85px;
 
   transform: translateX(-50%);
 
@@ -163,17 +206,17 @@
     linear-gradient(
       90deg,
       transparent,
-      rgba(35, 183, 163, 0.07),
-      rgba(35, 183, 163, 0.14),
-      rgba(20, 153, 223, 0.07),
+      rgba(35,183,163,.035),
+      rgba(35,183,163,.13),
+      rgba(20,153,223,.06),
       transparent
     );
 
-  filter: blur(8px);
+  filter: blur(9px);
 }
 
 
-/* Bright scanner core */
+/* Scanner point */
 
 .hs-scan-beam span {
   position: absolute;
@@ -188,25 +231,25 @@
 
   border-radius: 50%;
 
-  background: #ffffff;
+  background: white;
 
   box-shadow:
-    0 0 5px #ffffff,
-    0 0 14px #23b7a3,
-    0 0 28px #1499df;
+    0 0 5px white,
+    0 0 15px #23b7a3,
+    0 0 30px #1499df;
 }
 
 
-/* ---------------------------------------------------------
-   LIGHT SWEEP
-   --------------------------------------------------------- */
+/* =========================================================
+   CINEMATIC LIGHT SWEEP
+   ========================================================= */
 
 .hs-light-sweep {
   position: absolute;
 
-  z-index: 4;
+  z-index: 6;
 
-  inset: -20%;
+  inset: -25%;
 
   pointer-events: none;
 
@@ -215,23 +258,26 @@
   background:
     linear-gradient(
       105deg,
-      transparent 35%,
-      rgba(255, 255, 255, 0.02) 42%,
-      rgba(255, 255, 255, 0.38) 50%,
-      rgba(255, 255, 255, 0.02) 58%,
-      transparent 65%
+      transparent 34%,
+      rgba(255,255,255,.015) 42%,
+      rgba(255,255,255,.34) 50%,
+      rgba(255,255,255,.015) 58%,
+      transparent 66%
     );
 
-  transform: translateX(-110%);
+  transform: translateX(-115%);
 
   animation:
-    hsLightSweep 1.25s cubic-bezier(.4, 0, .2, 1) 2.55s forwards;
+    hsLightSweep
+    1.15s
+    cubic-bezier(.4, 0, .2, 1)
+    2.65s forwards;
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    LOADING DOTS
-   --------------------------------------------------------- */
+   ========================================================= */
 
 .hs-loading {
   position: absolute;
@@ -242,14 +288,16 @@
   transform: translateX(-50%);
 
   display: flex;
+
   gap: 6px;
 
   opacity: 0;
 
   animation:
-    hsLoadingIn .7s ease-out 3.15s forwards,
+    hsLoadingIn .7s ease-out 3.25s forwards,
     hsLoadingOut .45s ease-in 4.05s forwards;
 }
+
 
 .hs-loading span {
   width: 5px;
@@ -259,8 +307,10 @@
 
   background: #23b7a3;
 
-  animation: hsDot 1s ease-in-out infinite;
+  animation:
+    hsDot 1s ease-in-out infinite;
 }
+
 
 .hs-loading span:nth-child(2) {
   animation-delay: .12s;
@@ -275,13 +325,10 @@
    ANIMATIONS
    ========================================================= */
 
-
-/* Background */
-
 @keyframes hsAtmosphereIn {
   from {
     opacity: 0;
-    transform: scale(.85);
+    transform: scale(.84);
   }
 
   to {
@@ -289,6 +336,7 @@
     transform: scale(1);
   }
 }
+
 
 @keyframes hsAtmospherePulse {
   0%,
@@ -302,27 +350,27 @@
 }
 
 
-/* Logo entrance */
+/* Logo stage entrance */
 
-@keyframes hsLogoReveal {
+@keyframes hsLogoStageIn {
   0% {
     opacity: 0;
 
     transform:
-      scale(.82)
+      scale(.84)
       translateY(18px);
 
-    filter: blur(18px);
+    filter: blur(16px);
   }
 
-  55% {
+  60% {
     opacity: 1;
 
     transform:
-      scale(1.025)
+      scale(1.018)
       translateY(-2px);
 
-    filter: blur(1px);
+    filter: blur(.7px);
   }
 
   100% {
@@ -337,49 +385,54 @@
 }
 
 
-/* Tiny final movement */
+/* =========================================================
+   TRUE SCANNED REVEAL
+   ========================================================= */
 
-@keyframes hsLogoSettle {
-  from {
-    transform: scale(1);
-  }
+@keyframes hsLogoScanReveal {
 
-  to {
-    transform: scale(1.012);
-  }
-}
-
-
-/* Logo glow */
-
-@keyframes hsLogoGlow {
   0% {
-    filter:
-      drop-shadow(0 14px 35px rgba(18, 80, 85, 0.10));
+    clip-path: inset(0 100% 0 0);
   }
 
-  45% {
-    filter:
-      drop-shadow(0 0 18px rgba(35, 183, 163, 0.20))
-      drop-shadow(0 18px 45px rgba(20, 153, 223, 0.12));
+  5% {
+    clip-path: inset(0 96% 0 0);
+  }
+
+  25% {
+    clip-path: inset(0 75% 0 0);
+  }
+
+  50% {
+    clip-path: inset(0 50% 0 0);
+  }
+
+  75% {
+    clip-path: inset(0 25% 0 0);
+  }
+
+  94% {
+    clip-path: inset(0 4% 0 0);
   }
 
   100% {
-    filter:
-      drop-shadow(0 14px 35px rgba(18, 80, 85, 0.10));
+    clip-path: inset(0 0 0 0);
   }
 }
 
 
-/* Scanner */
+/* =========================================================
+   SCAN MOVEMENT
+   ========================================================= */
 
 @keyframes hsScan {
+
   0% {
-    left: -4%;
+    left: -5%;
     opacity: 0;
   }
 
-  8% {
+  6% {
     opacity: 1;
   }
 
@@ -387,46 +440,52 @@
     opacity: 1;
   }
 
-  88% {
+  90% {
     opacity: 1;
   }
 
   100% {
-    left: 104%;
+    left: 105%;
     opacity: 0;
   }
 }
 
 
-/* Light sweep */
+/* =========================================================
+   LIGHT SWEEP
+   ========================================================= */
 
 @keyframes hsLightSweep {
+
   0% {
     opacity: 0;
-    transform: translateX(-110%);
+    transform: translateX(-115%);
   }
 
   15% {
     opacity: 1;
   }
 
-  75% {
+  65% {
     opacity: .8;
   }
 
   100% {
     opacity: 0;
-    transform: translateX(110%);
+    transform: translateX(115%);
   }
 }
 
 
-/* Loading */
+/* =========================================================
+   LOADING
+   ========================================================= */
 
 @keyframes hsLoadingIn {
+
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(5px);
+    transform: translateX(-50%) translateY(6px);
   }
 
   to {
@@ -435,7 +494,9 @@
   }
 }
 
+
 @keyframes hsLoadingOut {
+
   from {
     opacity: .8;
   }
@@ -445,11 +506,13 @@
   }
 }
 
+
 @keyframes hsDot {
+
   0%,
   100% {
     transform: translateY(0);
-    opacity: .35;
+    opacity: .3;
   }
 
   50% {
@@ -459,11 +522,12 @@
 }
 
 
-/* ---------------------------------------------------------
-   CINEMATIC EXIT
-   --------------------------------------------------------- */
+/* =========================================================
+   FINAL CINEMATIC TRANSITION
+   ========================================================= */
 
 @keyframes hsSplashExit {
+
   0% {
     opacity: 1;
 
@@ -472,12 +536,20 @@
     transform: scale(1);
   }
 
-  45% {
+  35% {
     opacity: 1;
 
-    filter: blur(4px);
+    filter: blur(2px);
 
-    transform: scale(1.012);
+    transform: scale(1.008);
+  }
+
+  70% {
+    opacity: .72;
+
+    filter: blur(7px);
+
+    transform: scale(1.018);
   }
 
   100% {
@@ -492,9 +564,9 @@
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    MOBILE
-   --------------------------------------------------------- */
+   ========================================================= */
 
 @media (max-width: 600px) {
 
@@ -502,30 +574,30 @@
     width: min(88vw, 440px);
   }
 
-  .hs-loading {
-    bottom: 10%;
-  }
-
   .hs-scan-beam {
     width: 2px;
   }
 
   .hs-scan-beam::before {
-    width: 52px;
+    width: 58px;
+  }
+
+  .hs-loading {
+    bottom: 10%;
   }
 }
 
 
-/* ---------------------------------------------------------
-   ACCESSIBILITY
-   --------------------------------------------------------- */
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
 
   .hs-splash,
   .hs-atmosphere,
   .hs-logo-stage,
-  .hs-logo,
+  .hs-logo-reveal,
   .hs-scan-beam,
   .hs-light-sweep,
   .hs-loading,
@@ -539,11 +611,11 @@
     filter: none;
   }
 
-  .hs-atmosphere {
-    opacity: 1;
+  .hs-logo-reveal {
+    clip-path: inset(0 0 0 0);
   }
 
-  .hs-splash {
-    animation: hsSplashExit .5s ease 1.5s forwards !important;
+  .hs-atmosphere {
+    opacity: 1;
   }
 }
