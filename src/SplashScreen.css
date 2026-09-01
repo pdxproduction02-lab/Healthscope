@@ -124,9 +124,9 @@
   clip-path: inset(0 100% 0 0);
 
   animation:
-    hsLogoScanReveal 2.15s
-    cubic-bezier(.55, .05, .2, .95)
-    1.35s forwards;
+  hsLogoScanReveal 2.15s
+  linear
+  1.35s forwards;
 }
 
 
@@ -180,9 +180,9 @@
     0 0 45px rgba(20,153,223,.25);
 
   animation:
-    hsScan 2.15s
-    cubic-bezier(.55, .05, .2, .95)
-    1.35s forwards;
+  hsScan 2.15s
+  linear
+  1.35s forwards;
 }
 
 
@@ -390,37 +390,14 @@
    ========================================================= */
 
 @keyframes hsLogoScanReveal {
-
-  0% {
+  from {
     clip-path: inset(0 100% 0 0);
   }
 
-  5% {
-    clip-path: inset(0 96% 0 0);
-  }
-
-  25% {
-    clip-path: inset(0 75% 0 0);
-  }
-
-  50% {
-    clip-path: inset(0 50% 0 0);
-  }
-
-  75% {
-    clip-path: inset(0 25% 0 0);
-  }
-
-  94% {
-    clip-path: inset(0 4% 0 0);
-  }
-
-  100% {
+  to {
     clip-path: inset(0 0 0 0);
   }
 }
-
-
 /* =========================================================
    SCAN MOVEMENT
    ========================================================= */
