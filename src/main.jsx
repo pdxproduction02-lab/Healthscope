@@ -845,24 +845,101 @@ useEffect(() => {
     const id = setTimeout(() => setToast(''), 2200)
     return () => clearTimeout(id)
   }, [toast])
+  const urlBase64ToUint8Array = (base64String) => {
+  const padding = '='.repeat(
+    (4 - (base64String.length % 4)) % 4
+  )
+
+  const base64 = (
+    base64String + padding
+  )
+    .replace(/-/g, '+')
+    .replace(/_/g, '/')
+
+  const rawData = window.atob(base64)
+
+  return Uint8Array.from(
+    [...rawData].map((char) => char.charCodeAt(0))
+  )
+  }
   const requestNotificationPermission = async () => {
-  if (typeof Notification === 'undefined') {
-    setToast('Notifications are not supported in this browser')
+  if (
+    typeof Notification === 'undefined' ||
+    !('serviceWorker' in navigator) ||
+    !('PushManager' in window)
+  ) {
+    setToast('Push notifications are not supported')
     return
   }
 
   try {
+    // 1. Ask for notification permission
     const permission = await Notification.requestPermission()
     setNotificationPermission(permission)
 
-    if (permission === 'granted') {
-      setToast('Notifications enabled 🔔')
-    } else if (permission === 'denied') {
-      setToast('Notifications blocked in browser settings')
-    } else {
-      setToast('Notification permission not granted')
+    if (permission !== 'granted') {
+      if (permission === 'denied') {
+        setToast('Notifications blocked in browser settings')
+      } else {
+        setToast('Notification permission not granted')
+      }
+      return
     }
-  } catch {
+
+    // 2. Wait for the HealthScope service worker
+    const registration = await navigator.serviceWorker.ready
+
+    // 3. Get existing subscription
+    let subscription =
+      await registration.pushManager.getSubscription()
+
+    // 4. Create a new subscription if needed
+    if (!subscription) {
+      const vapidPublicKey =
+        import.meta.env.VITE_VAPID_PUBLIC_KEY
+
+      if (!vapidPublicKey) {
+        throw new Error('VAPID public key is missing')
+      }
+
+      const applicationServerKey =
+        urlBase64ToUint8Array(vapidPublicKey)
+
+      subscription =
+        await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey
+        })
+    }
+
+    // 5. Send the subscription to our Vercel API
+    const response = await fetch('/api/send-push', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        subscription: subscription.toJSON(),
+        title: 'HealthScope 🔔',
+        body: 'Notifications are now connected!',
+        url: '/'
+      })
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || 'Failed to send push notification'
+      )
+    }
+
+    // 6. Update UI
+    setPushStatus('subscribed')
+    setToast('Notifications enabled 🔔')
+
+  } catch (error) {
+    console.error('Notification setup failed:', error)
     setToast('Could not enable notifications')
   }
   }
