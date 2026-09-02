@@ -626,13 +626,23 @@ const applicationServerKey = Uint8Array.from(
       })
     });
 
-    const result = await response.json();
+    const responseText = await response.text();
 
-    if (!response.ok) {
-      throw new Error(
-        result.error || 'Failed to send push notification'
-      );
-    }
+let result = {};
+
+try {
+  result = JSON.parse(responseText);
+} catch {
+  result = {
+    error: responseText
+  };
+}
+
+if (!response.ok) {
+  throw new Error(
+    result.error || 'Failed to send push notification'
+  );
+}
 
     setPushStatus('subscribed');
     notify('Test notification sent successfully 🔔');
