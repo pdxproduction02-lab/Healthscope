@@ -506,13 +506,23 @@ function Reminders({
       })
     });
 
-    const result = await response.json();
+    const responseText = await response.text();
 
-    if (!response.ok) {
-      throw new Error(
-        result.error || 'Failed to save reminder'
-      );
-    }
+let result = {};
+
+try {
+  result = JSON.parse(responseText);
+} catch {
+  result = {
+    error: responseText
+  };
+}
+
+if (!response.ok) {
+  throw new Error(
+    result.error || 'Failed to send push notification'
+  );
+}
 
     setReminders([...reminders, newReminder]);
 
