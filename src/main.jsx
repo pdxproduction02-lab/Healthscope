@@ -1009,17 +1009,30 @@ useEffect(() => {
     const registration = await navigator.serviceWorker.ready
 
     // 3. Get existing subscription
-    let subscription =
-      await registration.pushManager.getSubscription()
+let subscription =
+  await registration.pushManager.getSubscription()
 
-    // 4. Create a new subscription if needed
-    if (!subscription) {
-      const vapidPublicKey =
-        import.meta.env.VITE_VAPID_PUBLIC_KEY
+// 4. Always create a fresh subscription using the current VAPID key
+if (subscription) {
+  await subscription.unsubscribe()
+  subscription = null
+}
 
-      if (!vapidPublicKey) {
-        throw new Error('VAPID public key is missing')
-      }
+const vapidPublicKey =
+  import.meta.env.VITE_VAPID_PUBLIC_KEY
+
+if (!vapidPublicKey) {
+  throw new Error('VAPID public key is missing')
+}
+
+const applicationServerKey =
+  urlBase64ToUint8Array(vapidPublicKey)
+
+subscription =
+  await registration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey
+})
 
       const applicationServerKey =
         urlBase64ToUint8Array(vapidPublicKey)
