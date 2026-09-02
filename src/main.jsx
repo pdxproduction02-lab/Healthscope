@@ -1042,7 +1042,6 @@ subscription =
           userVisibleOnly: true,
           applicationServerKey
         })
-    }
 
     // 5. Send the subscription to our Vercel API
     const response = await fetch('/api/send-push', {
