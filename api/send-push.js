@@ -1,6 +1,6 @@
 import webpush from 'web-push';
 
-const vapidPublicKey = (process.env.VAPID_PUBLIC_KEY || '')
+const vapidPublicKey = (process.env.VITE_VAPID_PUBLIC_KEY || '')
   .trim()
   .replace(/=+$/, '')
   .replace(/\+/g, '-')
