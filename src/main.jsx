@@ -580,9 +580,21 @@ const testNotification = async () => {
         throw new Error('VAPID public key is missing');
       }
 
-      const applicationServerKey =
-        urlBase64ToUint8Array(vapidPublicKey);
+      const padding = '='.repeat(
+  (4 - (vapidPublicKey.length % 4)) % 4
+);
 
+const base64 = (
+  vapidPublicKey + padding
+)
+  .replace(/-/g, '+')
+  .replace(/_/g, '/');
+
+const rawData = window.atob(base64);
+
+const applicationServerKey = Uint8Array.from(
+  [...rawData].map((char) => char.charCodeAt(0))
+);
       subscription =
         await registration.pushManager.subscribe({
           userVisibleOnly: true,
