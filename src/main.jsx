@@ -546,7 +546,7 @@ function Reminders({
     notify('Reminder updated');
   };
 
-  const testNotification = async () => {
+const testNotification = async () => {
   if (typeof Notification === 'undefined') {
     notify('Notifications are not supported in this browser');
     return;
@@ -557,24 +557,67 @@ function Reminders({
     return;
   }
 
-  if (!('serviceWorker' in navigator)) {
-    notify('Service workers are not supported in this browser');
+  if (
+    !('serviceWorker' in navigator) ||
+    !('PushManager' in window)
+  ) {
+    notify('Push notifications are not supported in this browser');
     return;
   }
 
   try {
     const registration = await navigator.serviceWorker.ready;
 
-    await registration.showNotification('HealthScope 🔔', {
-      body: 'Test successful! Your HealthScope notifications are working.',
-      tag: 'healthscope-test',
-      renotify: true
+    let subscription =
+      await registration.pushManager.getSubscription();
+
+    // Create PushSubscription if one does not exist
+    if (!subscription) {
+      const vapidPublicKey =
+        import.meta.env.VITE_VAPID_PUBLIC_KEY;
+
+      if (!vapidPublicKey) {
+        throw new Error('VAPID public key is missing');
+      }
+
+      const applicationServerKey =
+        urlBase64ToUint8Array(vapidPublicKey);
+
+      subscription =
+        await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey
+        });
+    }
+
+    // Send subscription to Vercel API
+    const response = await fetch('/api/send-push', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        subscription: subscription.toJSON(),
+        title: 'HealthScope 🔔',
+        body: 'Test successful! Your HealthScope notifications are working.',
+        url: '/'
+      })
     });
 
-    notify('Test notification sent successfully');
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || 'Failed to send push notification'
+      );
+    }
+
+    setPushStatus('subscribed');
+    notify('Test notification sent successfully 🔔');
+
   } catch (error) {
     console.error('Notification error:', error);
-    notify('Notification could not be displayed');
+    notify('Notification setup failed');
   }
 };
   return (
