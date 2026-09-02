@@ -1,8 +1,14 @@
 import webpush from 'web-push';
 
+const vapidPublicKey = (process.env.VAPID_PUBLIC_KEY || '')
+  .trim()
+  .replace(/=+$/, '')
+  .replace(/\+/g, '-')
+  .replace(/\//g, '_');
+
 webpush.setVapidDetails(
   process.env.VAPID_SUBJECT,
-  process.env.VAPID_PUBLIC_KEY,
+  vapidPublicKey,
   process.env.VAPID_PRIVATE_KEY
 );
 
