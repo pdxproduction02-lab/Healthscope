@@ -464,21 +464,55 @@ function Reminders({
   const [frequency, setFrequency] = useState('daily');
   const [day, setDay] = useState('Monday');
 
-  const addReminder = (e) => {
-    e.preventDefault();
+  const addReminder = async (e) => {
+  e.preventDefault();
 
-    if (!title.trim()) return;
+  if (!title.trim()) return;
 
-    const newReminder = {
-      id: Date.now().toString(),
-      title: title.trim(),
-      type,
-      time,
-      frequency,
-      day: frequency === 'weekly' ? day : null,
-      createdAt: new Date().toISOString(),
-      completed: false
-    };
+  const newReminder = {
+    id: Date.now().toString(),
+    title: title.trim(),
+    type,
+    time,
+    frequency,
+    day: frequency === 'weekly' ? day : null,
+    createdAt: new Date().toISOString(),
+    completed: false
+  };
+
+  try {
+    if (!('serviceWorker' in navigator)) {
+      throw new Error('Service worker is not supported');
+    }
+
+    const registration = await navigator.serviceWorker.ready;
+
+    const subscription =
+      await registration.pushManager.getSubscription();
+
+    if (!subscription) {
+      notify('Please enable notifications first');
+      return;
+    }
+
+    const response = await fetch('/api/save-reminder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        reminder: newReminder,
+        subscription: subscription.toJSON()
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || 'Failed to save reminder'
+      );
+    }
 
     setReminders([...reminders, newReminder]);
 
@@ -488,8 +522,13 @@ function Reminders({
     setFrequency('daily');
     setDay('Monday');
 
-    notify('Reminder saved');
-  };
+    notify('Reminder saved 🔔');
+
+  } catch (error) {
+    console.error('Reminder save error:', error);
+    notify('Could not save reminder');
+  }
+};
   const deleteReminder = (id) => {
     setReminders(reminders.filter((reminder) => reminder.id !== id));
     notify('Reminder deleted');
