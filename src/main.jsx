@@ -616,8 +616,13 @@ const testNotification = async () => {
     notify('Test notification sent successfully 🔔');
 
   } catch (error) {
-    console.error('Notification error:', error);
-    notify('Notification setup failed');
+  console.error('Notification error:', error);
+
+  notify(
+    error?.message
+      ? `Push error: ${error.message}`
+      : 'Notification setup failed'
+  );
   }
 };
   return (
